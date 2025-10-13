@@ -1,56 +1,26 @@
 import type { Request, Response } from "express";
-import bcrypt from "bcryptjs";
-import User from "../models/user.model.js";
-import Patient from "../models/patient.model.js";
-import { generateToken } from "../utils/token.util.js";
-import { validateEmail, validatePassword } from "../utils/validation.util.js";
+import { AuthService } from "../services/auth.service.js";
 
-export const register = async (req: Request, res: Response) => {
-  try {
-    const { name, email, password, role = "patient" } = req.body;
+const authService = new AuthService();
 
-    if (!validateEmail(email))
-      return res.status(400).json({ message: "Invalid email format" });
-    if (!validatePassword(password))
-      return res
-        .status(400)
-        .json({ message: "Password must be at least 6 characters" });
-
-    const existing = await User.findOne({ email });
-    if (existing) return res.status(400).json({ message: "Email already exists" });
-
-    const hashed = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, password: hashed, role });
-
-    if (role === "patient") {
-      await Patient.create({
-        userId: user._id, // Types.ObjectId now typed correctly
-        age: 0,
-        gender: "Other",
-        contactNumber: "",
-        address: "",
-      });
+export class AuthController {
+  async register(req: Request, res: Response): Promise<void> {
+    try {
+      const { name, email, password, role } = req.body;
+      const { user, token } = await authService.registerUser(name, email, password, role);
+      res.status(201).json({ message: "User registered successfully", user, token });
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
     }
-
-    const token = generateToken(user._id.toString(), role); // safe now
-    res.status(201).json({ message: "User registered successfully", user, token });
-  } catch (err: any) {
-    res.status(500).json({ message: err.message });
   }
-};
 
-export const login = async (req: Request, res: Response) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    const valid = await bcrypt.compare(password, user.password);
-    if (!valid) return res.status(401).json({ message: "Invalid credentials" });
-
-    const token = generateToken(user._id.toString(), user.role); // safe
-    res.json({ message: "Login successful", user, token });
-  } catch (err: any) {
-    res.status(500).json({ message: err.message });
+  async login(req: Request, res: Response): Promise<void> {
+    try {
+      const { email, password } = req.body;
+      const { user, token } = await authService.loginUser(email, password);
+      res.status(200).json({ message: "Login successful", user, token });
+    } catch (error: any) {
+      res.status(401).json({ message: error.message });
+    }
   }
-};
+}

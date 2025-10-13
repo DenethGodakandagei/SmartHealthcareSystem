@@ -1,18 +1,5 @@
-import mongoose, { Document, Schema } from "mongoose";
-
-export interface IPatient extends Document {
-  userId: mongoose.Types.ObjectId; 
-  age: number;
-  gender: "Male" | "Female" | "Other";
-  contactNumber: string;
-  address: string;
-  medicalHistory?: string[];
-  allergies?: string[];
-  emergencyContact?: {
-    name: string;
-    phone: string;
-  };
-}
+import mongoose, {  Schema } from "mongoose";
+import { IPatient } from "../interfaces/patient.interfaces.js";
 
 const patientSchema = new Schema<IPatient>({
   userId: {

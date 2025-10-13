@@ -1,79 +1,52 @@
 import type { Request, Response } from "express";
-import Record from "../models/record.model.js";
+import { RecordService } from "../services/record.service.js";
 
-// ✅ Get a patient record
-export const getPatientRecord = async (req: Request, res: Response): Promise<void> => {
+const recordService = new RecordService();
+
+export const getAllRecords = async (req: Request, res: Response) => {
   try {
-    const record = await Record.findOne({ patientId: req.params.patientId })
-      .populate("patientId")
-      .populate("doctorId", "name email");
-
-    if (!record) {
-      res.status(404).json({ message: "Record not found" });
-      return;
-    }
-
-    res.json(record);
-  } catch (err: any) {
-    res.status(500).json({ message: err.message });
+    const records = await recordService.getAllRecords();
+    res.status(200).json(records);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
   }
 };
 
-// ✅ Update treatment details
-export const updateTreatment = async (req: Request, res: Response): Promise<void> => {
+export const getRecordById = async (req: Request, res: Response) => {
   try {
-    const { diagnosis, notes, procedures } = req.body;
-
-    const record = await Record.findOneAndUpdate(
-      { patientId: req.params.patientId },
-      {
-        $set: {
-          "treatment.diagnosis": diagnosis,
-          "treatment.notes": notes,
-          "treatment.procedures": procedures,
-          "treatment.updatedAt": new Date(),
-        },
-      },
-      { new: true }
-    );
-
-    if (!record) {
-      res.status(404).json({ message: "Record not found" });
-      return;
-    }
-
-    res.json({ message: "Treatment updated successfully", record });
-  } catch (err: any) {
-    res.status(500).json({ message: err.message });
+    const record = await recordService.getRecordById(req.params.id);
+    if (!record) return res.status(404).json({ message: "Record not found" });
+    res.status(200).json(record);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
   }
 };
 
-// ✅ Update prescription details
-export const updatePrescription = async (req: Request, res: Response): Promise<void> => {
+export const createRecord = async (req: Request, res: Response) => {
   try {
-    const { name, dosage, frequency, duration } = req.body;
+    const record = await recordService.createRecord(req.body);
+    res.status(201).json(record);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
-    const record = await Record.findOneAndUpdate(
-      { patientId: req.params.patientId },
-      {
-        $set: {
-          "prescription.name": name,
-          "prescription.dosage": dosage,
-          "prescription.frequency": frequency,
-          "prescription.duration": duration,
-          "prescription.updatedAt": new Date(),
-        },
-      },
-      { new: true }
-    );
+export const updateRecord = async (req: Request, res: Response) => {
+  try {
+    const updated = await recordService.updateRecord(req.params.id, req.body);
+    if (!updated) return res.status(404).json({ message: "Record not found" });
+    res.status(200).json(updated);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
-    if (!record) {
-      res.status(404).json({ message: "Record not found" });
-      return;
-    }
-
-    res.json({ message: "Prescription updated successfully", record });
-  } catch (err: any) {
-    res.status(500).json({ message: err.message });
+export const deleteRecord = async (req: Request, res: Response) => {
+  try {
+    const deleted = await recordService.deleteRecord(req.params.id);
+    if (!deleted) return res.status(404).json({ message: "Record not found" });
+    res.status(200).json({ message: "Record deleted successfully" });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
   }
 };

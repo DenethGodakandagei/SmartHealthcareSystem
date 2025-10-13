@@ -1,12 +1,5 @@
-import mongoose, { Document, Schema, Types } from "mongoose";
-
-export interface IUser extends Document {
-  _id: Types.ObjectId; // ✅ Explicitly define _id type
-  name: string;
-  email: string;
-  password: string;
-  role: "doctor" | "staff" | "manager" | "patient";
-}
+import mongoose, { Schema  } from "mongoose";
+import { IUser } from "../interfaces/user.interface.js";
 
 const userSchema = new Schema<IUser>({
   name: {

@@ -1,22 +1,6 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
+import { IRecord } from "../interfaces/record.interface.js";
 
-export interface IRecord extends Document {
-  patientId: mongoose.Types.ObjectId;
-  doctorId: mongoose.Types.ObjectId;
-  treatment: {
-    diagnosis: string;
-    notes: string;
-    procedures: string;
-    updatedAt: Date;
-  };
-  prescription: {
-    name: string;
-    dosage: string;
-    frequency: string;
-    duration: string;
-    updatedAt: Date;
-  };
-}
 
 const recordSchema = new Schema<IRecord>(
   {

@@ -1,10 +1,11 @@
-import express from "express";
-import { getAllPatients, getPatientById } from "../controllers/patient.controller.js";
-import { verifyDoctor } from "../middleware/auth.middleware.js";
+import { Router } from "express";
+import { getAllPatients, getPatientById, updatePatient, deletePatient } from "../controllers/patient.controller.js";
 
-const router = express.Router();
+const router = Router();
 
-router.get("/", verifyDoctor, getAllPatients);
-router.get("/:id", verifyDoctor, getPatientById);
+router.get("/", getAllPatients);
+router.get("/:id", getPatientById);
+router.put("/:id", updatePatient);
+router.delete("/:id", deletePatient);
 
 export default router;

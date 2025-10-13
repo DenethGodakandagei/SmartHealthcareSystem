@@ -1,8 +1,8 @@
-export const validateEmail = (email: string) => {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(email);
+export const validateEmail = (email: string): boolean => {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
 };
 
-export const validatePassword = (password: string) => {
+export const validatePassword = (password: string): boolean => {
   return password.length >= 6;
 };
