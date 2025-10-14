@@ -246,7 +246,7 @@ export default function Home() {
                     size="lg"
                     className="bg-emerald-600 text-white hover:bg-emerald-700"
                   >
-                    <Link href="/sign-up">Sign Up Now</Link>
+                    <Link href="/login">Login</Link>
                   </Button>
                   <Button
                     asChild
@@ -254,7 +254,7 @@ export default function Home() {
                     size="lg"
                     className="border-gray-300 hover:bg-gray-100"
                   >
-                    <Link href="#pricing">View Pricing</Link>
+                    <Link href="/register">Sign Up</Link>
                   </Button>
                 </div>
               </div>
