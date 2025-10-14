@@ -6,6 +6,7 @@ import {
   updateDoctor,
   deleteDoctor,
   searchDoctors,
+  getDoctorsBySpecialty,
 } from "../controllers/doctor.controller.ts";
 
 const router = express.Router();
@@ -14,6 +15,7 @@ const router = express.Router();
 router.post("/", registerDoctor);
 router.get("/", getAllDoctors);
 router.get("/search", searchDoctors);
+router.get("/specialty/:specialty", getDoctorsBySpecialty);
 router.get("/:id", getDoctorById);
 router.put("/:id", updateDoctor);
 router.delete("/:id", deleteDoctor);
