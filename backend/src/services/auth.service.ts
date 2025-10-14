@@ -15,7 +15,7 @@ export class AuthService {
     name: string,
     email: string,
     password: string,
-    role: IUser["role"] = "patient"
+    role: IUser["role"] = "patient",
   ): Promise<AuthResponse> {
     // Validate inputs
     if (!validateEmail(email)) throw new Error("Invalid email format");
@@ -36,16 +36,6 @@ export class AuthService {
       password: hashedPassword,
       role,
     });
-
-    if (role === "patient") {
-      await Patient.create({
-        userId: user._id,
-        age: 0,
-        gender: "Other",
-        contactNumber: "",
-        address: "",
-      });
-    }
 
     // Generate JWT token
     const token = generateToken(user._id.toString(), user.role);
