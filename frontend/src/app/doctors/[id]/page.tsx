@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect ,useContext  } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { User, Calendar, Star } from "lucide-react";
+import { AuthContext } from "@/context/authcontext";
 
 interface TimeSlot {
   start: string;
@@ -41,12 +42,20 @@ export default function DoctorPage() {
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { user, token } = useContext(AuthContext); 
 
-  // Mock logged-in user (replace with real authentication later)
-  const patientId = "68edbfc782c66420a06fb7f1";
+  
+  const patientId = user?._id;
+  
 
   useEffect(() => {
     if (!id) return;
+    console.log("token:", user, token);
+ if (!token) {
+      
+      router.push("/login");
+      return;
+    }
 
     const fetchDoctor = async () => {
       try {

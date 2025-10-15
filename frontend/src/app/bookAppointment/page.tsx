@@ -30,7 +30,8 @@ export default function BookAppointmentPage() {
   const searchParams = useSearchParams();
 
   const doctorId = searchParams.get("doctorId");
-  const patientId = searchParams.get("patientId");
+  const userId = searchParams.get("patientId");
+  const [patientId, setPatientId] = useState<string | null>(null);
 
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [appointmentDate, setAppointmentDate] = useState<string>("");
@@ -39,29 +40,50 @@ export default function BookAppointmentPage() {
   const [message, setMessage] = useState<string>("");
   const [fetchingDoctor, setFetchingDoctor] = useState<boolean>(true);
 
-  // Fetch doctor details
+  console.log("patient" ,patientId);
+  console.log("doctorId", doctorId);
+
   useEffect(() => {
-    const fetchDoctor = async () => {
-      if (!doctorId) return;
+  const fetchPatient = async () => {
+    if (!userId) return;
+
+    try {
+      const res = await fetch(`http://localhost:5000/api/patients/user/${userId}`);
+      if (!res.ok) throw new Error("Failed to fetch patient details");
+
+      const data = await res.json();
+      setPatientId(data._id); 
+    } catch (error) {
+      console.error("Error fetching patient:", error);
+    }
+  };
+
+  fetchPatient();
+}, [userId]);
+
+
+    useEffect(() => {
+    const fetchPatient = async () => {
+      if (!userId) return;
+
       try {
-        setFetchingDoctor(true);
-        const res = await fetch(`http://localhost:5000/api/doctors/${doctorId}`);
+        const res = await fetch(`http://localhost:5000/api/patients/user/${patientId}`);
+        if (!res.ok) throw new Error("Failed to fetch patient details");
+
         const data = await res.json();
-        if (!res.ok) throw new Error(data.message || "Failed to fetch doctor");
-        setDoctor(data);
-      } catch (err: any) {
-        setMessage(`❌ ${err.message}`);
-      } finally {
-        setFetchingDoctor(false);
+        setPatientId(data._id); //  This is the actual patient ID
+      } catch (error) {
+        console.error("Error fetching patient:", error);
       }
     };
-    fetchDoctor();
-  }, [doctorId]);
+
+    fetchPatient();
+  }, [userId]);
 
   // Handle booking appointment
   const handleBookAppointment = async () => {
     if (!appointmentDate || !selectedSlot) {
-      setMessage("⚠️ Please select both a date and time slot.");
+      setMessage("⚠ Please select both a date and time slot.");
       return;
     }
 
