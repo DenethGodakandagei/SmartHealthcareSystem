@@ -9,11 +9,19 @@ import {
 
 const router = express.Router();
 
-// CRUD Routes
-router.post("/", generateReport);        // Create
-router.get("/", getReports);             // Read all
-router.get("/:id", getReportById);       // Read single
-router.put("/:id", updateReport);        // Update
-router.delete("/:id", deleteReport);     // Delete
+// Create / Generate a new report
+router.post("/", generateReport);
+
+// Get all reports
+router.get("/", getReports);
+
+// Get single report by ID
+router.get("/:id", getReportById);
+
+// Update report
+router.put("/:id", updateReport);
+
+// Delete report
+router.delete("/:id", deleteReport);
 
 export default router;

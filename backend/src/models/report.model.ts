@@ -1,30 +1,79 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import mongoose, { Schema, Document } from "mongoose";
 
-export const createReport = async (data: any) => {
-  return prisma.report.create({ data });
-};
+export interface IReport extends Document {
+  reportType: string;              // e.g. "Appointment Summary", "Revenue", "Doctor Performance"
+  department?: string;             // optional: Cardiology, Pediatrics, etc.
+  generatedBy: mongoose.Types.ObjectId;  // reference to the User who generated it
+  startDate: Date;
+  endDate: Date;
+  metrics: Record<string, any>;    // key-value data (e.g., totalAppointments, totalRevenue)
+  relatedDoctors?: mongoose.Types.ObjectId[]; // doctors involved
+  relatedPatients?: mongoose.Types.ObjectId[]; // patients included
+  scheduleType?: string;           // e.g. "Daily", "Weekly", "Monthly"
+  status: "Pending" | "Generated" | "Failed";
+  notes?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
-export const getReports = async (filter: any) => {
-  return prisma.report.findMany({
-    where: filter,
-    orderBy: { createdAt: "desc" },
-  });
-};
+const reportSchema = new Schema<IReport>(
+  {
+    reportType: {
+      type: String,
+      required: [true, "Report type is required"],
+      trim: true,
+    },
+    department: {
+      type: String,
+      trim: true,
+    },
+    generatedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    startDate: {
+      type: Date,
+      required: true,
+    },
+    endDate: {
+      type: Date,
+      required: true,
+    },
+    metrics: {
+      type: Schema.Types.Mixed,
+      default: {},
+    },
+    relatedDoctors: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Doctor",
+      },
+    ],
+    relatedPatients: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Patient",
+      },
+    ],
+    scheduleType: {
+      type: String,
+      enum: ["Daily", "Weekly", "Monthly", "Custom"],
+      default: "Custom",
+    },
+    status: {
+      type: String,
+      enum: ["Pending", "Generated", "Failed"],
+      default: "Pending",
+    },
+    notes: {
+      type: String,
+      trim: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-export const getReportData = async (filter: any) => {
-  // Example: aggregate patients, staff, resources
-  const patients = await prisma.patient.findMany({
-    where: { admissionDate: { gte: filter.start, lte: filter.end } },
-  });
-
-  const staffWorkload = await prisma.staff.findMany({
-    select: { department: true, workload: true },
-  });
-
-  const resources = await prisma.resource.findMany({
-    select: { resource: true, utilization: true },
-  });
-
-  return { patients, staffWorkload, resources };
-};
+export default mongoose.model<IReport>("Report", reportSchema);
