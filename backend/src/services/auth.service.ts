@@ -70,7 +70,7 @@ if (role === "patient" && extraData) {
     return { user, token };
   }
 
-  async loginUser(email: string, password: string): Promise<AuthResponse> {
+    async loginUser(email: string, password: string): Promise<AuthResponse> {
     // ✅ Check user existence
     const user = await User.findOne({ email });
     if (!user) throw new Error("User not found");
@@ -79,9 +79,20 @@ if (role === "patient" && extraData) {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) throw new Error("Invalid credentials");
 
-    // ✅ Generate token
+    // ✅ Generate JWT token
     const token = generateToken(user._id.toString(), user.role);
 
-    return { user, token };
+    let userData: any = user.toObject();
+
+    // ✅ If user is a patient, populate extra patient details
+    if (user.role === "patient") {
+      const patientDetails = await Patient.findOne({ userId: user._id });
+      if (patientDetails) {
+        userData.patient = patientDetails; // attach patient details to response
+      }
+    }
+
+    return { user: userData, token };
   }
+
 }

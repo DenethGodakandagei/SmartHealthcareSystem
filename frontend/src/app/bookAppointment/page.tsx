@@ -60,8 +60,6 @@ export default function BookAppointmentPage() {
 
   fetchPatient();
 }, [userId]);
-
-
     useEffect(() => {
     const fetchPatient = async () => {
       if (!userId) return;
@@ -83,7 +81,7 @@ export default function BookAppointmentPage() {
   // Handle booking appointment
   const handleBookAppointment = async () => {
     if (!appointmentDate || !selectedSlot) {
-      setMessage("⚠ Please select both a date and time slot.");
+      setMessage("⚠️ Please select both a date and time slot.");
       return;
     }
 
