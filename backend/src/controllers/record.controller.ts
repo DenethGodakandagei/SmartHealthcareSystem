@@ -10,7 +10,6 @@ export const getAllRecords = async (_req: Request, res: Response) => {
     res.status(500).json({ message: "Error fetching records", error: error.message });
   }
 };
-
 // Get records by patient
 export const getRecordsByPatient = async (req: Request, res: Response) => {
   const { patientId } = req.params;
