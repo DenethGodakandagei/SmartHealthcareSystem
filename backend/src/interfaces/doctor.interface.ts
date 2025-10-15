@@ -1,7 +1,7 @@
-import { Types } from "mongoose";
+import mongoose ,{ Types } from "mongoose";
 
 export interface IDoctor {
-  userId: Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
   doctorName: string;
   specialization: string;
   experienceYears: number;

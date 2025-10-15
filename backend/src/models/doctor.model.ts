@@ -2,7 +2,11 @@ import mongoose, { Schema } from "mongoose";
 import { IDoctor } from "../interfaces/doctor.interface";
 
 const doctorSchema = new Schema<IDoctor>(
-  {
+  {userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
     doctorName: {
       type: String,
       requred: true,
