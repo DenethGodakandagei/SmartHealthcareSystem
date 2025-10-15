@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
-import { DoctorService } from "../services/doctor.service.ts";
+import { DoctorService } from "../services/doctor.service.js";
 
 const doctorService = new DoctorService();
 
-// Register a new doctor
+// Register a new doctor (creates both User + Doctor)
 export const registerDoctor = async (req: Request, res: Response) => {
   try {
     const doctor = await doctorService.createDoctor(req.body);
-    res.status(201).json({ message: "Doctor created successfully!", doctor });
+    res.status(201).json({ message: "Doctor registered successfully!", doctor });
   } catch (error: any) {
     res.status(500).json({ message: error.message || "Server error while creating doctor." });
   }
@@ -18,7 +18,7 @@ export const getAllDoctors = async (_req: Request, res: Response) => {
   try {
     const doctors = await doctorService.getAllDoctors();
     res.status(200).json(doctors);
-  } catch (error: any) {
+  } catch {
     res.status(500).json({ message: "Error fetching doctors." });
   }
 };

@@ -2,10 +2,25 @@
 
 import { useState, FormEvent } from "react";
 import { Button } from "@/components/ui/button";
-import { User, Stethoscope, Calendar, Clock, Briefcase, DollarSign, Phone, FileText, Hospital, Image } from "lucide-react";
+import {
+  User,
+  Stethoscope,
+  Calendar,
+  Clock,
+  Briefcase,
+  DollarSign,
+  Phone,
+  FileText,
+  Hospital,
+  Image,
+  Mail,
+  Lock,
+} from "lucide-react";
 
 interface DoctorForm {
   doctorName: string;
+  email: string;
+  password: string;
   specialization: string;
   experienceYears: number;
   qualification: string;
@@ -21,6 +36,8 @@ interface DoctorForm {
 
 const initialForm: DoctorForm = {
   doctorName: "",
+  email: "",
+  password: "",
   specialization: "",
   experienceYears: 0,
   qualification: "",
@@ -50,7 +67,7 @@ const CreateDoctorPage = () => {
     setError(null);
 
     try {
-      // Convert time slots into objects as required by schema
+      // Convert time slots to objects
       const availableTimeSlots = form.availableTimeSlotsStart.map((start, index) => ({
         start,
         end: form.availableTimeSlotsEnd[index] || start,
@@ -58,6 +75,8 @@ const CreateDoctorPage = () => {
 
       const payload = {
         doctorName: form.doctorName,
+        email: form.email,
+        password: form.password,
         specialization: form.specialization,
         experienceYears: form.experienceYears,
         qualification: form.qualification,
@@ -79,7 +98,7 @@ const CreateDoctorPage = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to create doctor");
 
-      alert("Doctor created successfully!");
+      alert("Doctor registered successfully!");
       setForm(initialForm);
     } catch (err: any) {
       setError(err.message);
@@ -90,71 +109,215 @@ const CreateDoctorPage = () => {
 
   return (
     <div className="p-8 max-w-md mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Create Doctor</h1>
+      <h1 className="text-2xl font-bold mb-6">Register Doctor</h1>
       {error && <p className="text-red-500 mb-4">{error}</p>}
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {/* Doctor Name */}
         <div className="flex items-center gap-2">
           <User className="w-5 h-5 text-gray-500" />
-          <input type="text" name="doctorName" placeholder="Name" value={form.doctorName} onChange={handleChange} required className="flex-1 p-2 border rounded" />
+          <input
+            type="text"
+            name="doctorName"
+            placeholder="Doctor Name"
+            value={form.doctorName}
+            onChange={handleChange}
+            required
+            className="flex-1 p-2 border rounded"
+          />
         </div>
 
+        {/* Email */}
+        <div className="flex items-center gap-2">
+          <Mail className="w-5 h-5 text-gray-500" />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            required
+            className="flex-1 p-2 border rounded"
+          />
+        </div>
+
+        {/* Password */}
+        <div className="flex items-center gap-2">
+          <Lock className="w-5 h-5 text-gray-500" />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            required
+            className="flex-1 p-2 border rounded"
+          />
+        </div>
+
+        {/* Specialization */}
         <div className="flex items-center gap-2">
           <Stethoscope className="w-5 h-5 text-gray-500" />
-          <input type="text" name="specialization" placeholder="Specialization" value={form.specialization} onChange={handleChange} required className="flex-1 p-2 border rounded" />
+          <input
+            type="text"
+            name="specialization"
+            placeholder="Specialization"
+            value={form.specialization}
+            onChange={handleChange}
+            required
+            className="flex-1 p-2 border rounded"
+          />
         </div>
 
+        {/* Experience Years */}
         <div className="flex items-center gap-2">
           <Calendar className="w-5 h-5 text-gray-500" />
-          <input type="number" name="experienceYears" placeholder="Experience Years" value={form.experienceYears} onChange={handleChange} required className="flex-1 p-2 border rounded" />
+          <input
+            type="number"
+            name="experienceYears"
+            placeholder="Experience Years"
+            value={form.experienceYears}
+            onChange={handleChange}
+            required
+            className="flex-1 p-2 border rounded"
+          />
         </div>
 
+        {/* Qualification */}
         <div className="flex items-center gap-2">
           <Briefcase className="w-5 h-5 text-gray-500" />
-          <input type="text" name="qualification" placeholder="Qualification" value={form.qualification} onChange={handleChange} required className="flex-1 p-2 border rounded" />
+          <input
+            type="text"
+            name="qualification"
+            placeholder="Qualification"
+            value={form.qualification}
+            onChange={handleChange}
+            required
+            className="flex-1 p-2 border rounded"
+          />
         </div>
 
+        {/* Fee */}
         <div className="flex items-center gap-2">
           <DollarSign className="w-5 h-5 text-gray-500" />
-          <input type="number" name="consultationFee" placeholder="Consultation Fee" value={form.consultationFee} onChange={handleChange} required className="flex-1 p-2 border rounded" />
+          <input
+            type="number"
+            name="consultationFee"
+            placeholder="Consultation Fee"
+            value={form.consultationFee}
+            onChange={handleChange}
+            required
+            className="flex-1 p-2 border rounded"
+          />
         </div>
 
+        {/* Contact Number */}
         <div className="flex items-center gap-2">
           <Phone className="w-5 h-5 text-gray-500" />
-          <input type="text" name="contactNumber" placeholder="Contact Number" value={form.contactNumber} onChange={handleChange} required className="flex-1 p-2 border rounded" />
+          <input
+            type="text"
+            name="contactNumber"
+            placeholder="Contact Number"
+            value={form.contactNumber}
+            onChange={handleChange}
+            required
+            className="flex-1 p-2 border rounded"
+          />
         </div>
 
+        {/* Available Days */}
         <div className="flex items-center gap-2">
           <Calendar className="w-5 h-5 text-gray-500" />
-          <input type="text" placeholder="Available Days (comma separated)" value={form.availableDays.join(",")} onChange={(e) => setForm(prev => ({ ...prev, availableDays: e.target.value.split(",") }))} className="flex-1 p-2 border rounded" />
+          <input
+            type="text"
+            placeholder="Available Days (comma separated)"
+            value={form.availableDays.join(",")}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                availableDays: e.target.value.split(",").map((d) => d.trim()),
+              }))
+            }
+            className="flex-1 p-2 border rounded"
+          />
+        </div>
+
+        {/* Time Slots */}
+        <div className="flex items-center gap-2">
+          <Clock className="w-5 h-5 text-gray-500" />
+          <input
+            type="text"
+            placeholder="Start Times (comma separated e.g., 09:00 AM, 02:00 PM)"
+            value={form.availableTimeSlotsStart.join(",")}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                availableTimeSlotsStart: e.target.value.split(",").map((t) => t.trim()),
+              }))
+            }
+            className="flex-1 p-2 border rounded"
+          />
         </div>
 
         <div className="flex items-center gap-2">
           <Clock className="w-5 h-5 text-gray-500" />
-          <input type="text" placeholder="Time Slot Starts (comma separated e.g., 08:30,09:30)" value={form.availableTimeSlotsStart.join(",")} onChange={(e) => setForm(prev => ({ ...prev, availableTimeSlotsStart: e.target.value.split(",") }))} className="flex-1 p-2 border rounded" />
+          <input
+            type="text"
+            placeholder="End Times (comma separated e.g., 12:00 PM, 05:00 PM)"
+            value={form.availableTimeSlotsEnd.join(",")}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                availableTimeSlotsEnd: e.target.value.split(",").map((t) => t.trim()),
+              }))
+            }
+            className="flex-1 p-2 border rounded"
+          />
         </div>
 
-        <div className="flex items-center gap-2">
-          <Clock className="w-5 h-5 text-gray-500" />
-          <input type="text" placeholder="Time Slot Ends (comma separated e.g., 09:30,10:30)" value={form.availableTimeSlotsEnd.join(",")} onChange={(e) => setForm(prev => ({ ...prev, availableTimeSlotsEnd: e.target.value.split(",") }))} className="flex-1 p-2 border rounded" />
-        </div>
-
+        {/* Bio */}
         <div className="flex items-center gap-2">
           <FileText className="w-5 h-5 text-gray-500" />
-          <input type="text" name="bio" placeholder="Bio" value={form.bio} onChange={handleChange} className="flex-1 p-2 border rounded" />
+          <textarea
+            name="bio"
+            placeholder="Bio"
+            value={form.bio}
+            onChange={handleChange}
+            className="flex-1 p-2 border rounded"
+          />
         </div>
 
+        {/* Hospital */}
         <div className="flex items-center gap-2">
           <Hospital className="w-5 h-5 text-gray-500" />
-          <input type="text" name="hospitalName" placeholder="Hospital Name" value={form.hospitalName} onChange={handleChange} className="flex-1 p-2 border rounded" />
+          <input
+            type="text"
+            name="hospitalName"
+            placeholder="Hospital Name"
+            value={form.hospitalName}
+            onChange={handleChange}
+            required
+            className="flex-1 p-2 border rounded"
+          />
         </div>
 
+        {/* Image URL */}
         <div className="flex items-center gap-2">
           <Image className="w-5 h-5 text-gray-500" />
-          <input type="text" name="profileImage" placeholder="Profile Image URL" value={form.profileImage} onChange={handleChange} className="flex-1 p-2 border rounded" />
+          <input
+            type="text"
+            name="profileImage"
+            placeholder="Profile Image URL"
+            value={form.profileImage}
+            onChange={handleChange}
+            className="flex-1 p-2 border rounded"
+          />
         </div>
 
-        <Button type="submit" disabled={loading}>{loading ? "Creating..." : "Create Doctor"}</Button>
+        {/* Submit */}
+        <Button type="submit" disabled={loading}>
+          {loading ? "Creating..." : "Register Doctor"}
+        </Button>
       </form>
     </div>
   );
