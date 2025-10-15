@@ -42,6 +42,9 @@ export default function DoctorPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Mock logged-in user (replace with real authentication later)
+  const patientId = "68edbfc782c66420a06fb7f1";
+
   useEffect(() => {
     if (!id) return;
 
@@ -49,12 +52,10 @@ export default function DoctorPage() {
       try {
         setLoading(true);
         setError(null);
-
-        const res = await fetch(`http://localhost:5000/api/doctors/${id}`); // Your backend controller route
+        const res = await fetch(`http://localhost:5000/api/doctors/${id}`);
         const data = await res.json();
 
         if (!res.ok) throw new Error(data.message || "Failed to fetch doctor");
-
         setDoctor(data);
       } catch (err: any) {
         setError(err.message);
@@ -124,23 +125,6 @@ export default function DoctorPage() {
               <p className="text-gray-600 mt-4 text-center">{doctor.bio}</p>
             )}
 
-            {/* Availability */}
-            <div className="mt-4 w-full">
-              <h4 className="font-semibold text-gray-900 mb-2">Available Days & Time Slots</h4>
-              <ul className="text-sm text-muted-foreground">
-                {doctor.availableDays.map((day, i) => (
-                  <li key={i}>
-                    <span className="font-medium">{day}:</span>{" "}
-                    {doctor.availableTimeSlots.map((slot, j) => (
-                      <span key={j}>
-                        {slot.start} - {slot.end} {j < doctor.availableTimeSlots.length - 1 ? ", " : ""}
-                      </span>
-                    ))}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
             {/* Ratings */}
             {doctor.ratings.length > 0 && (
               <div className="mt-4 w-full">
@@ -156,15 +140,17 @@ export default function DoctorPage() {
               </div>
             )}
 
-            {/* Actions */}
+            {/* Book Appointment Button */}
             <div className="flex flex-col sm:flex-row gap-4 mt-6 w-full justify-center">
               <Button
                 asChild
                 className="bg-emerald-500 hover:bg-emerald-600 w-full sm:w-auto"
               >
-                <a href={`tel:${doctor.contactNumber}`}>
+                <a
+                  href={`/bookAppointment?doctorId=${doctor._id}&patientId=${patientId}`}
+                >
                   <Calendar className="h-4 w-4 mr-2 inline-block" />
-                  Make an Appoinment
+                  Make an Appointment
                 </a>
               </Button>
             </div>

@@ -8,7 +8,7 @@ import { DoctorCard } from "./components/doctor-card";
 interface Doctor {
   _id: string;
   name: string;
-  specialty: string;
+  specialization: string;
   email?: string;
   phone?: string;
 }
@@ -46,7 +46,7 @@ export default function DoctorsPage() {
     if (!specialty) {
       setFilteredDoctors(doctors); // Show all doctors
     } else {
-      setFilteredDoctors(doctors.filter((doc) => doc.specialty === specialty));
+      setFilteredDoctors(doctors.filter((doc) => doc.specialization === specialty));
     }
   };
 
