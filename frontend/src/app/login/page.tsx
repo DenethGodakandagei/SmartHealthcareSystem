@@ -26,8 +26,21 @@ export default function LoginPage() {
     try {
       const { data } = await API.post("/auth/login", form);
       login(data);
-      alert("Login successful!");
+      console.log("Login response data:", data);
+       const userRole = data?.user?.role;
+     
+         if (userRole === "doctor") {
+      router.push("/doctor/dashboard");
+    } else if (userRole === "staff") {
+      router.push("/staff");
+    } else if (userRole === "manager" || userRole === "admin") {
+      router.push("/admin");
+    } else if (userRole === "patient") {
       router.push("/");
+    } else {
+      router.push("/"); 
+    }
+     alert("Login successful!");
     } catch (err: any) {
       alert(err.response?.data?.message || "Invalid credentials");
     } finally {

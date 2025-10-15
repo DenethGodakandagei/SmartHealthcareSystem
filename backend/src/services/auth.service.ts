@@ -16,8 +16,14 @@ export class AuthService {
     email: string,
     password: string,
     role: IUser["role"] = "patient",
+    extraData?: {
+      age?: number;
+      gender?: string;
+      contactNumber?: string;
+      address?: string;
+    }
   ): Promise<AuthResponse> {
-    // Validate inputs
+    // Validate input
     if (!validateEmail(email)) throw new Error("Invalid email format");
     if (!validatePassword(password))
       throw new Error("Password must be at least 6 characters");
@@ -26,10 +32,10 @@ export class AuthService {
     const existingUser = await User.findOne({ email });
     if (existingUser) throw new Error("Email already exists");
 
-    // Hash password
+    //  Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new user
+    //  Create main user
     const user = await User.create({
       name,
       email,
@@ -37,22 +43,45 @@ export class AuthService {
       role,
     });
 
-    // Generate JWT token
+    //  If patient role → create related Patient document
+ 
+if (role === "patient" && extraData) {
+  const { age, gender, contactNumber, address } = extraData;
+
+  if (!age || !gender || !contactNumber || !address) {
+    throw new Error("Missing required patient details");
+  }
+
+  const newPatient = await Patient.create({
+    userId: user._id,
+    age,
+    gender,
+    contactNumber,
+    address,
+  });
+
+  console.log("Patient created:", newPatient._id);
+}
+
+
+    //  Generate JWT token
     const token = generateToken(user._id.toString(), user.role);
+
     return { user, token };
   }
 
   async loginUser(email: string, password: string): Promise<AuthResponse> {
-    // Check user existence
+    // ✅ Check user existence
     const user = await User.findOne({ email });
     if (!user) throw new Error("User not found");
 
-    // Validate password
+    // ✅ Validate password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) throw new Error("Invalid credentials");
 
-    // Generate token
+    // ✅ Generate token
     const token = generateToken(user._id.toString(), user.role);
+
     return { user, token };
   }
 }
