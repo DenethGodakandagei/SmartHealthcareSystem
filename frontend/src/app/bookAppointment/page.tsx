@@ -81,7 +81,7 @@ export default function BookAppointmentPage() {
   // Handle booking appointment
   const handleBookAppointment = async () => {
     if (!appointmentDate || !selectedSlot) {
-      setMessage("⚠ Please select both a date and time slot.");
+      setMessage("⚠️ Please select both a date and time slot.");
       return;
     }
 
