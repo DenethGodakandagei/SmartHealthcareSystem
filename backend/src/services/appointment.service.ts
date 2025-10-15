@@ -6,21 +6,19 @@ import type { IAppointment } from "../interfaces/appointment.interfaces.ts";
 export class AppointmentService {
 
   //  Book a new appointment
-  async createAppointment(data: IAppointment): Promise<IAppointment> {
-    const { doctorId, patientId, appointmentDate, timeSlot } = data;
+async createAppointment(data: IAppointment): Promise<IAppointment> {
+    const mockPatientId = "670d6a132f18f9a0c3e67bcd"; // fallback for testing
+    const { doctorId, patientId, appointmentDate, timeSlot, reasonForVisit, payment } = data;
 
-    // Validate doctor and patient existence
+    // ✅ Validate doctor existence
     const doctor = await Doctor.findById(doctorId);
-    if (!doctor) {
-      throw new Error("Doctor not found");
-    }
+    if (!doctor) throw new Error("Doctor not found");
 
-    const patient = await Patient.findById(patientId);
-    if (!patient) {
-      throw new Error("Patient not found");
-    }
+    // ✅ Validate or use mock patient
+    const patient = await Patient.findById(patientId || mockPatientId);
+    if (!patient) throw new Error("Patient not found");
 
-    // Check for conflicting appointment
+    // ✅ Check for conflicting appointment
     const existingAppointment = await Appointment.findOne({
       doctorId,
       appointmentDate,
@@ -32,9 +30,26 @@ export class AppointmentService {
       throw new Error("This time slot is already booked.");
     }
 
-    const appointment = new Appointment(data);
+    // ✅ Default payment info if not provided
+    const paymentInfo = payment || {
+      amount: 0, // default 0 if free consultation
+      status: "Pending",
+      transactionId: null,
+    };
+
+    const appointment = new Appointment({
+      doctorId,
+      patientId: patient._id,
+      appointmentDate,
+      timeSlot,
+      reasonForVisit,
+      status: "Pending",
+      payment: paymentInfo,
+    });
+
     return await appointment.save();
   }
+
 
   //Get all appointments (admin-level)
   async getAllAppointments(): Promise<IAppointment[]> {

@@ -35,7 +35,7 @@ const appointmentSchema = new Schema<IAppointment>(
       trim: true,
     },
     payment: {
-      amount: { type: Number, required: true },
+      amount: { type: Number,},
       status: {
         type: String,
         enum: ["Pending", "Paid", "Refunded"],

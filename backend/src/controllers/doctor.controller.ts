@@ -34,6 +34,32 @@ export const getDoctorById = async (req: Request, res: Response) => {
   }
 };
 
+// Get doctors by specialty 
+export const getDoctorsBySpecialty = async (req: Request, res: Response) => {
+  try {
+    // 1. Get the specialization from the request query parameters (e.g., /doctors/specialty?specialization=Cardiology)
+    const specialization = req.query.specialization?.toString();
+
+    if (!specialization) {
+      return res.status(400).json({ message: "Specialization query parameter is required." });
+    }
+
+    // 2. Call the service layer method to fetch doctors
+    // You will need to implement a 'getDoctorsBySpecialization' method in your DoctorService
+    const doctors = await doctorService.getDoctorsBySpecialization(specialization);
+
+    if (doctors.length === 0) {
+      // Optional: Return a 404 if no doctors are found for the given specialization
+      return res.status(404).json({ message: `No doctors found for specialization: ${specialization}` });
+    }
+
+    res.status(200).json(doctors);
+  } catch (error: any) {
+    res.status(500).json({ message: "Error fetching doctors by specialization." });
+  }
+};
+
+
 // Update doctor details
 export const updateDoctor = async (req: Request, res: Response) => {
   try {

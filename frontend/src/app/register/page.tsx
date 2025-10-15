@@ -28,32 +28,33 @@ export default function RegisterPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setLoading(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
 
-  try {
-    // Step 1: Register the main user account
-    const { data: userData } = await API.post("/auth/register", {
-      name: form.name,
-      email: form.email,
-      password: form.password,
-      role: form.role,
-    });
+    try {
+      // Step 1: Register the main user account
+      const { data: userData } = await API.post("/auth/register", {
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        role: "patient",
+        age: form.age,
+        gender: form.gender,
+        contactNumber: form.contactNumber,
+        address: form.address,
+      });
 
-   
-
-    login(userData);
-    alert("Registered successfully!");
-    router.push("/");
-
-  } catch (err: any) {
-    console.error("Registration error:", err.response?.data || err.message);
-    alert(err.response?.data?.message || "Registration failed");
-  } finally {
-    setLoading(false);
-  }
-};
+      login(userData);
+      alert("Registered successfully!");
+      router.push("/");
+    } catch (err: any) {
+      console.error("Registration error:", err.response?.data || err.message);
+      alert(err.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
@@ -63,7 +64,7 @@ export default function RegisterPage() {
         </h1>
 
         <form className="space-y-5" onSubmit={handleSubmit}>
-          {/* USER FIELDS */}
+          {/* BASIC USER FIELDS */}
           <input
             name="name"
             placeholder="Full Name"
@@ -91,66 +92,49 @@ export default function RegisterPage() {
             required
           />
 
-          {/* ROLE SELECTION */}
-          <select
-            name="role"
-            value={form.role}
+          {/* PATIENT FIELDS */}
+          <input
+            name="age"
+            type="number"
+            placeholder="Age"
+            value={form.age}
             onChange={handleChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
+            required
+          />
+
+          <select
+            name="gender"
+            value={form.gender}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
+            required
           >
-            <option value="patient">Patient</option>
-            <option value="doctor">Doctor</option>
-            <option value="staff">Staff</option>
-            <option value="manager">Manager</option>
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
           </select>
 
-          {/* PATIENT-SPECIFIC FIELDS */}
-          {form.role === "patient" && (
-            <>
-              <input
-                name="age"
-                type="number"
-                placeholder="Age"
-                value={form.age}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
-                required
-              />
+          <input
+            name="contactNumber"
+            type="text"
+            placeholder="Contact Number"
+            value={form.contactNumber}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
+            required
+          />
 
-              <select
-                name="gender"
-                value={form.gender}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
-                required
-              >
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
-
-              <input
-                name="contactNumber"
-                type="text"
-                placeholder="Contact Number"
-                value={form.contactNumber}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
-                required
-              />
-
-              <input
-                name="address"
-                type="text"
-                placeholder="Address"
-                value={form.address}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
-                required
-              />
-            </>
-          )}
+          <input
+            name="address"
+            type="text"
+            placeholder="Address"
+            value={form.address}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
+            required
+          />
 
           {/* SUBMIT BUTTON */}
           <button
@@ -164,7 +148,10 @@ export default function RegisterPage() {
 
         <p className="mt-6 text-sm text-center text-gray-500">
           Already have an account?{" "}
-          <a href="/login" className="text-blue-600 hover:underline font-medium">
+          <a
+            href="/login"
+            className="text-blue-600 hover:underline font-medium"
+          >
             Login
           </a>
         </p>

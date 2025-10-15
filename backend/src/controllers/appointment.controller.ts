@@ -7,6 +7,7 @@ const appointmentService = new AppointmentService();
  * @desc Book a new appointment
  * @route POST /api/appointments
  */
+
 export const bookAppointment = async (req: Request, res: Response) => {
   try {
     const appointment = await appointmentService.createAppointment(req.body);
