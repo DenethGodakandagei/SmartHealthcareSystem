@@ -23,7 +23,6 @@ export default async function DoctorDashboardPage() {
   if (user?.role !== "DOCTOR") {
     redirect("/onboarding");
   }
-
   // If already verified, redirect to dashboard
   if (user?.verificationStatus !== "VERIFIED") {
     redirect("/doctor/verification");
