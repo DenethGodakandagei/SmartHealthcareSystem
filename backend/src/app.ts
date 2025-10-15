@@ -1,13 +1,9 @@
-import express, { Application } from "express";
+import express from "express";
+import type { Application } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-
-// Import route modules
-import routes from "./routes/index.js"; // your main routes (auth, patients, doctors, records)
-import reportRoutes from "./routes/report.routes.js"; // report routes
-
-// Import middleware
-import { errorHandler } from "./middleware/errorHandler.js";
+import routes from "./routes/index.js"; 
+import { errorHandler } from "./middleware/errorHandler.js"; 
 
 dotenv.config();
 
@@ -18,11 +14,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//  API Routes
+// API Routes
 app.use("/api", routes);
-
-//  Report Routes (register separately)
-app.use("/api/reports", reportRoutes);
 
 //  Health Check Route
 app.get("/", (req, res) => {
