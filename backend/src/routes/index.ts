@@ -3,6 +3,7 @@ import authRoutes from "./auth.routes";
 import patientRoutes from "./patient.route";
 import reportRoutes from "./report.routes";
 import doctorRoutes from "./doctor.routes";
+import appointmentRoutes from "./appointment.routes";
 
 const router = express.Router();
 
