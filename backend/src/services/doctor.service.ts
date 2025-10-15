@@ -79,6 +79,10 @@ export class DoctorService {
       specialization: { $regex: specialization, $options: "i" },
     }).populate("userId", "name email").sort({ doctorName: 1 });
   }
+// In DoctorService
+async getDoctorByUserId(userId: string): Promise<IDoctor | null> {
+  return await Doctor.findOne({ userId }).populate("userId", "name email role");
+}
 
   // Update doctor details
   async updateDoctor(id: string, data: Partial<IDoctor>): Promise<IDoctor | null> {

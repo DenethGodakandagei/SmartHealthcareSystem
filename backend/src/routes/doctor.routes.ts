@@ -3,6 +3,7 @@ import {
   registerDoctor,
   getAllDoctors,
   getDoctorById,
+  getDoctorByUserId,
   updateDoctor,
   deleteDoctor,
   searchDoctors,
@@ -14,6 +15,7 @@ const router = express.Router();
 // Doctor Routes
 router.post("/", registerDoctor);
 router.get("/", getAllDoctors);
+router.get("/user/:userId", getDoctorByUserId);
 router.get("/search", searchDoctors);
 router.get("/specialty/:specialty", getDoctorsBySpecialty);
 router.get("/:id", getDoctorById);

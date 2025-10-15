@@ -12,6 +12,21 @@ export const registerDoctor = async (req: Request, res: Response) => {
     res.status(500).json({ message: error.message || "Server error while creating doctor." });
   }
 };
+// get doctor by userId
+export const getDoctorByUserId = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const doctor = await doctorService.getDoctorByUserId(userId);
+
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found for this user." });
+    }
+
+    res.status(200).json(doctor);
+  } catch (error: any) {
+    res.status(500).json({ message: "Error fetching doctor details by userId." });
+  }
+};
 
 // Get all doctors
 export const getAllDoctors = async (_req: Request, res: Response) => {
