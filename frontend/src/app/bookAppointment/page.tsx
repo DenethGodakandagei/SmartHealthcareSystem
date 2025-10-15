@@ -60,8 +60,6 @@ export default function BookAppointmentPage() {
 
   fetchPatient();
 }, [userId]);
-
-
     useEffect(() => {
     const fetchPatient = async () => {
       if (!userId) return;
