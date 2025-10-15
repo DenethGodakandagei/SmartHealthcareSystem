@@ -1,8 +1,10 @@
-import mongoose, { Schema, Document } from "mongoose";
+import {  Document, Types } from "mongoose";
+import mongoose from "mongoose";
 
 export interface IRecord extends Document {
   patientId: mongoose.Types.ObjectId;
   doctorId: mongoose.Types.ObjectId;
+  appointmentId: mongoose.Types.ObjectId;
   treatment: {
     diagnosis: string;
     notes: string;
