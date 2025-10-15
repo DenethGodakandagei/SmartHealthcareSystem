@@ -57,7 +57,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-20">
       <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-2xl">
         <h1 className="text-3xl font-bold text-center text-blue-600 mb-6">
           Patient Registration

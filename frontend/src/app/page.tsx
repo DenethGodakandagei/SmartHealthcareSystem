@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <div className="bg-background">
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-32">
+      <section className="relative overflow-hidden py-10 px-2">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
@@ -37,8 +37,8 @@ export default function Home() {
                   size="lg"
                   className="bg-emerald-600 text-white hover:bg-emerald-700"
                 >
-                  <Link href="/register">
-                    Get Started <ArrowRight className="ml-2 h-4 w-4" />
+                  <Link href="/login">
+                    Login <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
                 <Button
@@ -47,12 +47,12 @@ export default function Home() {
                   size="lg"
                   className="border-gray-300 hover:bg-gray-100" // Adjusted for light background
                 >
-                  <Link href="/doctors">Find Doctors</Link>
+                  <Link href="/register">Register as Patient</Link>
                 </Button>
               </div>
             </div>
 
-            <div className="relative h-[400px] lg:h-[500px] rounded-xl overflow-hidden">
+            <div className="relative h-[400px] lg:h-[600px] rounded-xl overflow-hidden">
               <Image
                 src="/banner2.png"
                 alt="Doctor consultation"

@@ -9,6 +9,9 @@ export class PatientService {
   async getPatientById(id: string): Promise<IPatient | null> {
     return await Patient.findById(id).populate("userId");
   }
+  async getPatientByUserId(userId: string): Promise<IPatient | null> {
+    return await Patient.findOne({ userId }).populate("userId", "name email role");
+  }
 
   async updatePatient(id: string, data: Partial<IPatient>): Promise<IPatient | null> {
     return await Patient.findByIdAndUpdate(id, data, { new: true });

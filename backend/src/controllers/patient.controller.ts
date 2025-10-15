@@ -41,3 +41,18 @@ export const deletePatient = async (req: Request, res: Response) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getPatientByUserId = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const patient = await patientService.getPatientByUserId(userId);
+
+    if (!patient) {
+      return res.status(404).json({ message: "Patient not found for this user" });
+    }
+
+    res.status(200).json(patient);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
