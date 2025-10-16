@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import RecordService from "../services/record.service.js";
+import RecordService from "../services/record.service";
 
 // Get all records
 export const getAllRecords = async (_req: Request, res: Response) => {
