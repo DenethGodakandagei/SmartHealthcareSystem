@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import { PlusIcon, TrashIcon, DownloadIcon, EyeIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
