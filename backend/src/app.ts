@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 
 // Import route modules
 import routes from "./routes/index.js"; // your main routes (auth, patients, doctors, records)
-import reportRoutes from "./routes/report.routes.js"; // report routes
+import HealthcareReportRoutes from "./routes/HealthcareReport.routes.js";
 
 // Import middleware
 import { errorHandler } from "./middleware/errorHandler.js";
@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api", routes);
 
 //  Report Routes (register separately)
-app.use("/api/reports", reportRoutes);
+app.use("/api/reports", HealthcareReportRoutes);
 
 //  Health Check Route
 app.get("/", (req, res) => {
