@@ -79,14 +79,12 @@ class RecordService {
   }
 
   // Delete record
-  async deleteRecord(recordId: string): Promise<{ message: string }> {
-    if (!Types.ObjectId.isValid(recordId)) throw new Error("Invalid recordId");
-
-    const deleted = await Record.findByIdAndDelete(recordId);
-    if (!deleted) throw new Error("Record not found");
-
-    return { message: "Record deleted successfully" };
-  }
+ async deleteRecord(recordId: string): Promise<{ message: string }> {
+  // ...
+  const deleted = await Record.findByIdAndDelete(recordId);
+  if (!deleted) throw new Error("Record not found");
+  return { message: "Record deleted successfully" };
+}
 }
 
 export default new RecordService();
