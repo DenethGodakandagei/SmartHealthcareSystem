@@ -7,6 +7,7 @@ const service = new HealthcareReportService();
 export class HealthcareReportController {
   async createReport(req: Request, res: Response) {
     try {
+      console.log("Request Body:", req.body); // Debugging line
       const report = await service.createReport(req.body);
       res.status(201).json(report);
     } catch (error) {
