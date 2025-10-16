@@ -1,6 +1,9 @@
 // services/HealthcareReportService.ts
-import HealthcareReport, { IHealthcareReportDocument } from "../models/HealthcareReport.model";
+import HealthcareReport from "../models/HealthcareReport.model";
 import { IHealthcareReport } from "../interfaces/HealthcareReport";
+import { Document } from "mongoose";
+
+type IHealthcareReportDocument = IHealthcareReport & Document;
 
 export class HealthcareReportService {
   async createReport(data: IHealthcareReport): Promise<IHealthcareReportDocument> {

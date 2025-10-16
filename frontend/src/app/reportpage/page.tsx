@@ -3,8 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { TrashIcon, EyeIcon, PencilIcon } from 'lucide-react'
-import { HealthcareReportGenerator } from '@/components/HealthcareReportGenerator'
-import MedicalPage from '../medical/page'
+
 
 interface Report {
   id: string

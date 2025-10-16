@@ -1,22 +1,21 @@
-// interfaces/IHealthcareReport.ts
 export interface IMedication {
   name: string;
-  dosage: string;
-  frequency: string;
-  duration: string;
+  dosage?: string;
+  frequency?: string;
+  duration?: string;
 }
 
 export interface ILabResult {
   test: string;
-  result: string;
-  normalRange: string;
-  interpretation: string;
+  result?: string;
+  normalRange?: string;
+  interpretation?: string;
 }
 
 export interface IDoctorInfo {
   name: string;
-  specialization: string;
-  licenseNumber: string;
+  specialization?: string;
+  licenseNumber?: string;
   signature?: string;
 }
 
@@ -52,7 +51,7 @@ export interface IHealthcareReport {
   vitalSigns: IVitalSigns;
   diagnosis?: IDiagnosis;
   medications: IMedication[];
-  labResults: ILabResult[];
-  reportDate: string;
+  labResults?: ILabResult[];
   doctorInfo: IDoctorInfo;
+  reportDate: string;
 }
