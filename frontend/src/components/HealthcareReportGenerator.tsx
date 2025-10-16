@@ -105,9 +105,6 @@ const handlePdfDownload = async () => {
     setMedications(updated)
   }
 
-
-
-
 // Lab Results handlers
   const addLabResult = () =>
     setLabResults([...labResults, { test: "", result: "", normalRange: "", interpretation: "" }])

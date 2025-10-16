@@ -1,58 +1,66 @@
-import mongoose, { Schema, Document } from 'mongoose'
-import { HealthcareReport } from '../interfaces/HealthcareReport'
+// models/HealthcareReport.ts
+import mongoose, { Schema, Document } from "mongoose";
+import { IHealthcareReport } from "../interfaces/HealthcareReport";
 
-interface HealthcareReportDocument extends HealthcareReport, Document {}
+export interface IHealthcareReportDocument extends IHealthcareReport, Document {}
 
-const MedicationSchema = new Schema(
-  {
-    medicationName: String,
-    dosage: String,
-    frequency: String,
-    duration: String,
-  },
-  { _id: false }
-)
+const MedicationSchema = new Schema({
+  name: { type: String, required: true },
+  dosage: { type: String },
+  frequency: { type: String },
+  duration: { type: String },
+});
 
-const LabResultSchema = new Schema(
-  {
-    testName: String,
-    result: String,
-    normalRange: String,
-    interpretation: String,
-  },
-  { _id: false }
-)
+const LabResultSchema = new Schema({
+  test: { type: String, required: true },
+  result: { type: String },
+  normalRange: { type: String },
+  interpretation: { type: String },
+});
+
+const DoctorInfoSchema = new Schema({
+  name: { type: String, required: true },
+  specialization: { type: String },
+  licenseNumber: { type: String },
+  signature: { type: String },
+});
 
 const HealthcareReportSchema = new Schema(
   {
-    patientName: { type: String, required: true },
-    patientId: { type: String, required: true, unique: true },
-    age: Number,
-    gender: String,
-    dateOfBirth: Date,
-    contactNumber: String,
-    address: String,
-
-    bloodPressure: String,
-    heartRate: String,
-    respiratoryRate: String,
-    temperature: String,
-    oxygenSaturation: String,
-    height: String,
-    weight: String,
-
-    primaryDiagnosis: String,
-    secondaryDiagnosis: String,
-    icdCode: String,
-    clinicalNotes: String,
-
+    patientInfo: {
+      patientName: { type: String, required: true },
+      patientId: { type: String, required: true },
+      age: { type: String },
+      gender: { type: String },
+      dateOfBirth: { type: String },
+      contactNumber: { type: String },
+      address: { type: String },
+    },
+    vitalSigns: {
+      bloodPressure: { type: String },
+      heartRate: { type: String },
+      respiratoryRate: { type: String },
+      temperature: { type: String },
+      oxygenSaturation: { type: String },
+      height: { type: String },
+      weight: { type: String },
+    },
+    diagnosis: {
+      primaryDiagnosis: { type: String },
+      secondaryDiagnosis: { type: String },
+      icdCode: { type: String },
+      notes: { type: String },
+    },
     medications: [MedicationSchema],
     labResults: [LabResultSchema],
-
-    reportDate: { type: Date, default: Date.now },
-    createdBy: String,
+    reportDate: { type: String, required: true },
+    doctorInfo: DoctorInfoSchema,
   },
   { timestamps: true }
-)
+);
 
-export default mongoose.model<HealthcareReportDocument>('healthcare_reports', HealthcareReportSchema)
+export default mongoose.models.HealthcareReport ||
+  mongoose.model<IHealthcareReportDocument>(
+    "HealthcareReport",
+    HealthcareReportSchema
+  );

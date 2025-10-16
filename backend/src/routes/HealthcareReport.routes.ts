@@ -1,12 +1,14 @@
-import { Router } from 'express'
-import * as reportController from '../controllers/HealthcareReport.controller'
+// routes/HealthcareReportRoutes.ts
+import { Router } from "express";
+import { HealthcareReportController } from "../controllers/HealthcareReport.controller";
 
-const router = Router()
+const router = Router();
+const controller = new HealthcareReportController();
 
-router.post('/', reportController.createReport)
-router.get('/', reportController.getAllReports)
-router.get('/:id', reportController.getReportById)
-router.put('/:id', reportController.updateReport)
-router.delete('/:id', reportController.deleteReport)
+router.post("/", (req, res) => controller.createReport(req, res));
+router.get("/", (req, res) => controller.getAllReports(req, res));
+router.get("/:id", (req, res) => controller.getReportById(req, res));
+router.put("/:id", (req, res) => controller.updateReport(req, res));
+router.delete("/:id", (req, res) => controller.deleteReport(req, res));
 
-export default router
+export default router;

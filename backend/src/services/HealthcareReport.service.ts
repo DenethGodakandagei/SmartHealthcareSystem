@@ -1,22 +1,26 @@
-import HealthcareReport from '../models/HealthcareReport.model'
+// services/HealthcareReportService.ts
+import HealthcareReport, { IHealthcareReportDocument } from "../models/HealthcareReport.model";
+import { IHealthcareReport } from "../interfaces/HealthcareReport";
 
-export const createReport = async (data: any) => {
-  const report = new HealthcareReport(data)
-  return await report.save()
-}
+export class HealthcareReportService {
+  async createReport(data: IHealthcareReport): Promise<IHealthcareReportDocument> {
+    const report = new HealthcareReport(data);
+    return report.save();
+  }
 
-export const getAllReports = async () => {
-  return await HealthcareReport.find()
-}
+  async getAllReports(): Promise<IHealthcareReportDocument[]> {
+    return HealthcareReport.find().sort({ createdAt: -1 });
+  }
 
-export const getReportById = async (id: string) => {
-  return await HealthcareReport.findById(id)
-}
+  async getReportById(id: string): Promise<IHealthcareReportDocument | null> {
+    return HealthcareReport.findById(id);
+  }
 
-export const updateReport = async (id: string, data: any) => {
-  return await HealthcareReport.findByIdAndUpdate(id, data, { new: true })
-}
+  async updateReport(id: string, data: Partial<IHealthcareReport>): Promise<IHealthcareReportDocument | null> {
+    return HealthcareReport.findByIdAndUpdate(id, data, { new: true });
+  }
 
-export const deleteReport = async (id: string) => {
-  return await HealthcareReport.findByIdAndDelete(id)
+  async deleteReport(id: string): Promise<IHealthcareReportDocument | null> {
+    return HealthcareReport.findByIdAndDelete(id);
+  }
 }

@@ -1,50 +1,55 @@
-import { Request, Response } from 'express'
-import * as reportService from '../services/HealthcareReport.service'
+// controllers/HealthcareReportController.ts
+import { Request, Response } from "express";
+import { HealthcareReportService } from "../services/HealthcareReport.service";
 
-export const createReport = async (req: Request, res: Response) => {
-  try {
-    const report = await reportService.createReport(req.body)
-    res.status(201).json(report)
-  } catch (error: any) {
-    res.status(400).json({ message: error.message })
+const service = new HealthcareReportService();
+
+export class HealthcareReportController {
+  async createReport(req: Request, res: Response) {
+    try {
+      const report = await service.createReport(req.body);
+      res.status(201).json(report);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to create report", details: error });
+    }
   }
-}
 
-export const getAllReports = async (req: Request, res: Response) => {
-  try {
-    const reports = await reportService.getAllReports()
-    res.status(200).json(reports)
-  } catch (error: any) {
-    res.status(500).json({ message: error.message })
+  async getAllReports(req: Request, res: Response) {
+    try {
+      const reports = await service.getAllReports();
+      res.status(200).json(reports);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch reports", details: error });
+    }
   }
-}
 
-export const getReportById = async (req: Request, res: Response) => {
-  try {
-    const report = await reportService.getReportById(req.params.id)
-    if (!report) return res.status(404).json({ message: 'Report not found' })
-    res.status(200).json(report)
-  } catch (error: any) {
-    res.status(500).json({ message: error.message })
+  async getReportById(req: Request, res: Response) {
+    try {
+      const report = await service.getReportById(req.params.id);
+      if (!report) return res.status(404).json({ error: "Report not found" });
+      res.status(200).json(report);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch report", details: error });
+    }
   }
-}
 
-export const updateReport = async (req: Request, res: Response) => {
-  try {
-    const updated = await reportService.updateReport(req.params.id, req.body)
-    if (!updated) return res.status(404).json({ message: 'Report not found' })
-    res.status(200).json(updated)
-  } catch (error: any) {
-    res.status(400).json({ message: error.message })
+  async updateReport(req: Request, res: Response) {
+    try {
+      const report = await service.updateReport(req.params.id, req.body);
+      if (!report) return res.status(404).json({ error: "Report not found" });
+      res.status(200).json(report);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update report", details: error });
+    }
   }
-}
 
-export const deleteReport = async (req: Request, res: Response) => {
-  try {
-    const deleted = await reportService.deleteReport(req.params.id)
-    if (!deleted) return res.status(404).json({ message: 'Report not found' })
-    res.status(204).send()
-  } catch (error: any) {
-    res.status(500).json({ message: error.message })
+  async deleteReport(req: Request, res: Response) {
+    try {
+      const report = await service.deleteReport(req.params.id);
+      if (!report) return res.status(404).json({ error: "Report not found" });
+      res.status(200).json({ message: "Report deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete report", details: error });
+    }
   }
 }

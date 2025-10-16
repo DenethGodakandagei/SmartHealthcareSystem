@@ -1,46 +1,58 @@
-export interface Medication {
-  medicationName: string
-  dosage: string
-  frequency: string
-  duration: string
+// interfaces/IHealthcareReport.ts
+export interface IMedication {
+  name: string;
+  dosage: string;
+  frequency: string;
+  duration: string;
 }
 
-export interface LabResult {
-  testName: string
-  result: string
-  normalRange: string
-  interpretation: string
+export interface ILabResult {
+  test: string;
+  result: string;
+  normalRange: string;
+  interpretation: string;
 }
 
-export interface HealthcareReport {
-  patientName: string
-  patientId: string
-  age?: number
-  gender?: 'Male' | 'Female' | 'Other'
-  dateOfBirth?: Date
-  contactNumber?: string
-  address?: string
+export interface IDoctorInfo {
+  name: string;
+  specialization: string;
+  licenseNumber: string;
+  signature?: string;
+}
 
-  // Vital Signs
-  bloodPressure?: string
-  heartRate?: string
-  respiratoryRate?: string
-  temperature?: string
-  oxygenSaturation?: string
-  height?: string
-  weight?: string
+export interface IPatientInfo {
+  patientName: string;
+  patientId: string;
+  age?: string;
+  gender?: string;
+  dateOfBirth?: string;
+  contactNumber?: string;
+  address?: string;
+}
 
-  // Diagnosis
-  primaryDiagnosis?: string
-  secondaryDiagnosis?: string
-  icdCode?: string
-  clinicalNotes?: string
+export interface IVitalSigns {
+  bloodPressure?: string;
+  heartRate?: string;
+  respiratoryRate?: string;
+  temperature?: string;
+  oxygenSaturation?: string;
+  height?: string;
+  weight?: string;
+}
 
-  // Medications & Lab Results
-  medications?: Medication[]
-  labResults?: LabResult[]
+export interface IDiagnosis {
+  primaryDiagnosis?: string;
+  secondaryDiagnosis?: string;
+  icdCode?: string;
+  notes?: string;
+}
 
-  // Meta
-  reportDate?: Date
-  createdBy?: string
+export interface IHealthcareReport {
+  patientInfo: IPatientInfo;
+  vitalSigns: IVitalSigns;
+  diagnosis?: IDiagnosis;
+  medications: IMedication[];
+  labResults: ILabResult[];
+  reportDate: string;
+  doctorInfo: IDoctorInfo;
 }
