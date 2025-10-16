@@ -2,13 +2,12 @@
 import { Request, Response } from "express";
 import { HealthcareReportService } from "../services/HealthcareReport.service";
 
-const service = new HealthcareReportService();
-
 export class HealthcareReportController {
+  constructor(private service: HealthcareReportService = new HealthcareReportService()) {}
+
   async createReport(req: Request, res: Response) {
     try {
-      //console.log("Request Body:", req.body); // Debugging line
-      const report = await service.createReport(req.body);
+      const report = await this.service.createReport(req.body);
       res.status(201).json(report);
     } catch (error) {
       res.status(500).json({ error: "Failed to create report", details: error });
@@ -17,7 +16,7 @@ export class HealthcareReportController {
 
   async getAllReports(req: Request, res: Response) {
     try {
-      const reports = await service.getAllReports();
+      const reports = await this.service.getAllReports();
       res.status(200).json(reports);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch reports", details: error });
@@ -26,7 +25,7 @@ export class HealthcareReportController {
 
   async getReportById(req: Request, res: Response) {
     try {
-      const report = await service.getReportById(req.params.id);
+      const report = await this.service.getReportById(req.params.id);
       if (!report) return res.status(404).json({ error: "Report not found" });
       res.status(200).json(report);
     } catch (error) {
@@ -36,7 +35,7 @@ export class HealthcareReportController {
 
   async updateReport(req: Request, res: Response) {
     try {
-      const report = await service.updateReport(req.params.id, req.body);
+      const report = await this.service.updateReport(req.params.id, req.body);
       if (!report) return res.status(404).json({ error: "Report not found" });
       res.status(200).json(report);
     } catch (error) {
@@ -46,7 +45,7 @@ export class HealthcareReportController {
 
   async deleteReport(req: Request, res: Response) {
     try {
-      const report = await service.deleteReport(req.params.id);
+      const report = await this.service.deleteReport(req.params.id);
       if (!report) return res.status(404).json({ error: "Report not found" });
       res.status(200).json({ message: "Report deleted successfully" });
     } catch (error) {
