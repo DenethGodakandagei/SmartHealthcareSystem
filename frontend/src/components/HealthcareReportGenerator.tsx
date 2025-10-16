@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from 'react'
 import { useReactToPrint } from 'react-to-print'
+import html2canvas from "html2canvas";
 
 import { jsPDF } from 'jspdf'
 import {
@@ -73,20 +74,21 @@ const handlePrint = useReactToPrint({
 
 
   // PDF Download
-  const handlePdfDownload = () => {
-    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" })
-    if (reportRef.current) {
-      doc.html(reportRef.current, {
-        callback: function (pdf) {
-          pdf.save(`Medical_Report_${patientInfo.patientName}_${reportDate}.pdf`)
-        },
-        x: 10,
-        y: 10,
-        width: 190,
-        windowWidth: 800,
-      })
-    }
+
+const handlePdfDownload = async () => {
+  if (reportRef.current) {
+    const canvas = await html2canvas(reportRef.current, {
+      scale: 2,
+      useCORS: true,
+    });
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+    const width = pdf.internal.pageSize.getWidth();
+    const height = (canvas.height * width) / canvas.width;
+    pdf.addImage(imgData, "PNG", 0, 0, width, height);
+    pdf.save(`Medical_Report_${patientInfo.patientName}_${reportDate}.pdf`);
   }
+};
 
    // Medications handlers
   const addMedication = () =>
