@@ -1,6 +1,6 @@
-import Record from "../models/record.model.js";
+import Record from "../models/record.model";
 import { Types } from "mongoose";
-import { IRecord } from "../interfaces/record.interface.js";
+import { IRecord } from "../interfaces/record.interface";
 
 interface RecordData {
   patientId: string;
