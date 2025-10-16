@@ -3,7 +3,8 @@
 import React, { useState, useRef } from "react";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-import { PlusIcon, TrashIcon, PrinterIcon, DownloadIcon } from "lucide-react";
+import { PlusIcon, TrashIcon, DownloadIcon, EyeIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export const HealthcareReportGenerator = () => {
   const [patientInfo, setPatientInfo] = useState({
@@ -42,22 +43,51 @@ export const HealthcareReportGenerator = () => {
   });
 
   const reportRef = useRef<HTMLDivElement>(null);
-
+  const router = useRouter();
 
   // PDF Download
   const handlePdfDownload = async () => {
+  try {
     if (reportRef.current) {
-      const canvas = await html2canvas(reportRef.current, { scale: 2 });
+      // Generate image from the report div
+     const canvas = await html2canvas(reportRef.current, {
+        scale: 2,
+        backgroundColor: "#ffffff", // important!
+        useCORS: true,
+        allowTaint: true,
+      });
       const imgData = canvas.toDataURL("image/png");
+
+      // Create PDF
       const pdf = new jsPDF("p", "mm", "a4");
       const width = pdf.internal.pageSize.getWidth();
       const height = (canvas.height * width) / canvas.width;
       pdf.addImage(imgData, "PNG", 0, 0, width, height);
-      pdf.save(`Medical_Report_${patientInfo.patientName}_${reportDate}.pdf`);
-    }
-  };
 
-  // Submit Handler
+      // Convert PDF to Blob
+      const pdfBlob = pdf.output("blob");
+
+      // Download using Axios-like blob handling
+      const url = window.URL.createObjectURL(pdfBlob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute(
+        "download",
+        `Medical_Report_${patientInfo.patientName}_${reportDate}.pdf`
+      );
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    }
+  } catch (error) {
+    console.error("Error generating PDF:", error);
+    alert("Failed to generate PDF. Check console for details.");
+  }
+};
+
+
+  // Submit handler
   const handleSubmit = async () => {
     const payload = {
       patientInfo,
@@ -68,7 +98,7 @@ export const HealthcareReportGenerator = () => {
     };
 
     try {
-      const res = await fetch("/api/reports", {
+      const res = await fetch("http://localhost:5000/api/reports", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -77,14 +107,17 @@ export const HealthcareReportGenerator = () => {
       if (!res.ok) throw new Error("Failed to save report");
       alert("Report saved successfully!");
     } catch (error: any) {
-      console.error(error);
+      console.error("Error saving report:", error);
       alert(error.message || "Something went wrong!");
     }
   };
 
   // Medication Handlers
   const addMedication = () =>
-    setMedications([...medications, { name: "", dosage: "", frequency: "", duration: "" }]);
+    setMedications([
+      ...medications,
+      { name: "", dosage: "", frequency: "", duration: "" },
+    ]);
   const removeMedication = (index: number) =>
     setMedications(medications.filter((_, i) => i !== index));
   const updateMedication = (
@@ -96,15 +129,17 @@ export const HealthcareReportGenerator = () => {
     updated[index][field] = value;
     setMedications(updated);
   };
-  
+
   return (
     <div className="container mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold text-center text-blue-700 mb-6">
         Healthcare Report Generator
       </h1>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Form Section */}
         <div className="bg-white p-6 rounded-lg shadow-md space-y-6">
+          {/* Patient Info */}
           <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">
             Patient Information
           </h2>
@@ -161,7 +196,10 @@ export const HealthcareReportGenerator = () => {
               placeholder="Contact Number"
               value={patientInfo.contactNumber}
               onChange={(e) =>
-                setPatientInfo({ ...patientInfo, contactNumber: e.target.value })
+                setPatientInfo({
+                  ...patientInfo,
+                  contactNumber: e.target.value,
+                })
               }
               className="border p-2 rounded"
             />
@@ -195,8 +233,6 @@ export const HealthcareReportGenerator = () => {
             ))}
           </div>
 
-         
-
           {/* Medications */}
           <h2 className="text-xl font-semibold text-gray-800 flex justify-between items-center">
             Medications
@@ -210,14 +246,19 @@ export const HealthcareReportGenerator = () => {
             </button>
           </h2>
           {medications.map((med, index) => (
-            <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2">
+            <div
+              key={index}
+              className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2"
+            >
               {["name", "dosage", "frequency", "duration"].map((field) => (
                 <input
                   key={field}
                   type="text"
                   placeholder={field}
                   value={(med as any)[field]}
-                  onChange={(e) => updateMedication(index, field as any, e.target.value)}
+                  onChange={(e) =>
+                    updateMedication(index, field as any, e.target.value)
+                  }
                   className="border p-2 rounded"
                 />
               ))}
@@ -231,8 +272,8 @@ export const HealthcareReportGenerator = () => {
             </div>
           ))}
 
-          {/* Report Date & Doctor Info */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Doctor Info */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t pt-4">
             <input
               type="date"
               value={reportDate}
@@ -243,7 +284,9 @@ export const HealthcareReportGenerator = () => {
               type="text"
               placeholder="Doctor Name"
               value={doctorInfo.name}
-              onChange={(e) => setDoctorInfo({ ...doctorInfo, name: e.target.value })}
+              onChange={(e) =>
+                setDoctorInfo({ ...doctorInfo, name: e.target.value })
+              }
               className="border p-2 rounded"
             />
             <input
@@ -251,7 +294,10 @@ export const HealthcareReportGenerator = () => {
               placeholder="Specialization"
               value={doctorInfo.specialization}
               onChange={(e) =>
-                setDoctorInfo({ ...doctorInfo, specialization: e.target.value })
+                setDoctorInfo({
+                  ...doctorInfo,
+                  specialization: e.target.value,
+                })
               }
               className="border p-2 rounded"
             />
@@ -260,59 +306,58 @@ export const HealthcareReportGenerator = () => {
               placeholder="License Number"
               value={doctorInfo.licenseNumber}
               onChange={(e) =>
-                setDoctorInfo({ ...doctorInfo, licenseNumber: e.target.value })
+                setDoctorInfo({
+                  ...doctorInfo,
+                  licenseNumber: e.target.value,
+                })
               }
               className="border p-2 rounded"
             />
           </div>
 
-          {/* Submit / PDF Buttons */}
-          <div className="flex space-x-2 mt-4">
+          <div className="flex justify-center mt-6">
             <button
               onClick={handleSubmit}
               className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
             >
-              Submit
-            </button>
-          
-            <button
-              onClick={handlePdfDownload}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center"
-            >
-              <DownloadIcon className="w-4 h-4 mr-1" />
-              Save PDF
+              Submit Report
             </button>
           </div>
         </div>
 
         {/* Preview Section */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="bg-white p-6 rounded-lg shadow-md flex flex-col">
           <h2 className="text-2xl font-bold text-center text-blue-800 mb-6">
             Report Preview
           </h2>
+
           <div
-            className="overflow-y-auto max-h-[800px] p-6 border border-gray-300 rounded-lg bg-gray-50"
-            ref={reportRef}
-          >
+              ref={reportRef}
+              className="overflow-y-auto max-h-[800px] p-6 border border-gray-300 rounded-lg bg-white"
+            >
+
             {/* Header */}
             <div className="text-center mb-6 border-b-2 border-blue-700 pb-2">
-              <h1 className="text-3xl font-bold text-blue-800">Medical Report</h1>
+              <h1 className="text-3xl font-bold text-blue-800">
+                Medical Report
+              </h1>
               <p className="text-gray-600 mt-1">Generated on: {reportDate}</p>
             </div>
 
-            {/* Patient Information */}
+            {/* Patient Info */}
             <div className="mb-6">
               <h3 className="text-xl font-semibold text-blue-700 border-b pb-1 mb-2">
                 Patient Information
               </h3>
               <div className="grid grid-cols-2 gap-4">
-                <p><span className="font-semibold">Name:</span> {patientInfo.patientName || '-'}</p>
-                <p><span className="font-semibold">Patient ID:</span> {patientInfo.patientId || '-'}</p>
-                <p><span className="font-semibold">Age:</span> {patientInfo.age || '-'}</p>
-                <p><span className="font-semibold">Gender:</span> {patientInfo.gender || '-'}</p>
-                <p><span className="font-semibold">DOB:</span> {patientInfo.dateOfBirth || '-'}</p>
-                <p><span className="font-semibold">Contact:</span> {patientInfo.contactNumber || '-'}</p>
-                <p className="col-span-2"><span className="font-semibold">Address:</span> {patientInfo.address || '-'}</p>
+                {Object.entries(patientInfo).map(([key, val]) => (
+                  <p key={key}>
+                    <span className="font-semibold">
+                      {key.replace(/([A-Z])/g, " $1")}:
+                    </span>{" "}
+                    {val || "-"}
+                  </p>
+                ))}
               </div>
             </div>
 
@@ -321,21 +366,15 @@ export const HealthcareReportGenerator = () => {
               <h3 className="text-xl font-semibold text-blue-700 border-b pb-1 mb-2">
                 Vital Signs
               </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-gray-700">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-gray-700">
                 {Object.entries(vitalSigns).map(([key, val]) => (
                   <p key={key}>
-                    <span className="font-semibold">{key.replace(/([A-Z])/g, ' $1')}:</span> {val || '-'}
+                    <span className="font-semibold">
+                      {key.replace(/([A-Z])/g, " $1")}:
+                    </span>{" "}
+                    {val || "-"}
                   </p>
                 ))}
-                {vitalSigns.height && vitalSigns.weight && (
-                  <p>
-                    <span className="font-semibold">BMI:</span>{" "}
-                    {(
-                      parseFloat(vitalSigns.weight) /
-                      (parseFloat(vitalSigns.height) / 100) ** 2
-                    ).toFixed(1)}
-                  </p>
-                )}
               </div>
             </div>
 
@@ -360,9 +399,9 @@ export const HealthcareReportGenerator = () => {
                         m.name && (
                           <tr key={idx} className="border-t">
                             <td className="border p-2">{m.name}</td>
-                            <td className="border p-2">{m.dosage || '-'}</td>
-                            <td className="border p-2">{m.frequency || '-'}</td>
-                            <td className="border p-2">{m.duration || '-'}</td>
+                            <td className="border p-2">{m.dosage || "-"}</td>
+                            <td className="border p-2">{m.frequency || "-"}</td>
+                            <td className="border p-2">{m.duration || "-"}</td>
                           </tr>
                         )
                     )}
@@ -373,12 +412,22 @@ export const HealthcareReportGenerator = () => {
 
             {/* Doctor Info */}
             <div className="mt-6 border-t pt-4">
-              <h3 className="text-xl font-semibold text-blue-700 mb-2">Doctor Information</h3>
-              <p><span className="font-semibold">Name:</span> {doctorInfo.name || '-'}</p>
-              <p><span className="font-semibold">Specialization:</span> {doctorInfo.specialization || '-'}</p>
-              <p><span className="font-semibold">License:</span> {doctorInfo.licenseNumber || '-'}</p>
-              <div className="mt-4 flex justify-between items-center">
-                <div></div>
+              <h3 className="text-xl font-semibold text-blue-700 mb-2">
+                Doctor Information
+              </h3>
+              <p>
+                <span className="font-semibold">Name:</span>{" "}
+                {doctorInfo.name || "-"}
+              </p>
+              <p>
+                <span className="font-semibold">Specialization:</span>{" "}
+                {doctorInfo.specialization || "-"}
+              </p>
+              <p>
+                <span className="font-semibold">License:</span>{" "}
+                {doctorInfo.licenseNumber || "-"}
+              </p>
+              <div className="mt-4 flex justify-end">
                 <div className="text-center">
                   <div className="h-16 border-b border-gray-400 w-40 mb-1"></div>
                   <p className="text-sm text-gray-600">Doctor's Signature</p>
@@ -386,8 +435,24 @@ export const HealthcareReportGenerator = () => {
               </div>
             </div>
           </div>
-        </div>
 
+          {/* Action Buttons Below Preview */}
+          <div className="flex justify-center mt-6 space-x-4">
+            <button
+              onClick={handlePdfDownload}
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center"
+            >
+              <DownloadIcon className="w-4 h-4 mr-1" /> Save PDF
+            </button>
+
+            <button
+              onClick={() => router.push("/medical/reportpage")}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center"
+            >
+              <EyeIcon className="w-4 h-4 mr-1" /> View All Reports
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
