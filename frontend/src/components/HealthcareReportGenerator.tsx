@@ -45,41 +45,125 @@ export const HealthcareReportGenerator = () => {
   const reportRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  // PDF Download
-  const handlePdfDownload = async () => {
+const handlePdfDownload = () => {
   try {
-    if (reportRef.current) {
-      // Generate image from the report div
-     const canvas = await html2canvas(reportRef.current, {
-        scale: 2,
-        backgroundColor: "#ffffff", // important!
-        useCORS: true,
-        allowTaint: true,
+    const pdf = new jsPDF("p", "mm", "a4");
+    let y = 15; // Start below top margin
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+
+    // ---------------- HEADER ----------------
+    pdf.setFontSize(24);
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Medical Report", pageWidth / 2, y, { align: "center" });
+    y += 8;
+
+    pdf.setFontSize(10);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`Generated on: ${reportDate}`, pageWidth / 2, y, { align: "center" });
+    y += 12;
+
+    pdf.setDrawColor(0);
+    pdf.setLineWidth(0.5);
+    pdf.line(10, y, pageWidth - 10, y); // Horizontal line
+    y += 6;
+
+    // ---------------- PATIENT INFO ----------------
+    pdf.setFontSize(16);
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Patient Information", 10, y);
+    y += 6;
+    pdf.setFontSize(11);
+    pdf.setFont("helvetica", "normal");
+
+    Object.entries(patientInfo).forEach(([key, val]) => {
+      pdf.text(`${key.replace(/([A-Z])/g, " $1")}: ${val || "-"}`, 10, y);
+      y += 6;
+      if (y > 280) { pdf.addPage(); y = 15; }
+    });
+    y += 4;
+
+    pdf.line(10, y, pageWidth - 10, y);
+    y += 6;
+
+    // ---------------- VITAL SIGNS ----------------
+    pdf.setFontSize(16);
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Vital Signs", 10, y);
+    y += 6;
+    pdf.setFontSize(11);
+    pdf.setFont("helvetica", "normal");
+
+    Object.entries(vitalSigns).forEach(([key, val]) => {
+      pdf.text(`${key.replace(/([A-Z])/g, " $1")}: ${val || "-"}`, 10, y);
+      y += 6;
+      if (y > 280) { pdf.addPage(); y = 15; }
+    });
+    y += 4;
+
+    pdf.line(10, y, pageWidth - 10, y);
+    y += 6;
+
+    // ---------------- MEDICATIONS TABLE ----------------
+    if (medications.some((m) => m.name)) {
+      pdf.setFontSize(16);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Medications", 10, y);
+      y += 8;
+
+      pdf.setFontSize(11);
+      pdf.setFont("helvetica", "bold");
+
+      const medHeaders = ["Name", "Dosage", "Frequency", "Duration"];
+      medHeaders.forEach((h, i) => pdf.text(h, 10 + i * 45, y));
+      y += 6;
+      pdf.setFont("helvetica", "normal");
+
+      medications.forEach((m, index) => {
+        if (m.name) {
+          // Alternate row shading
+          if (index % 2 === 0) {
+            pdf.setFillColor(240, 240, 240);
+            pdf.rect(10, y - 4, pageWidth - 20, 6, "F");
+          }
+
+          pdf.text(m.name, 10, y);
+          pdf.text(m.dosage || "-", 55, y);
+          pdf.text(m.frequency || "-", 100, y);
+          pdf.text(m.duration || "-", 145, y);
+          y += 6;
+          if (y > 280) { pdf.addPage(); y = 15; }
+        }
       });
-      const imgData = canvas.toDataURL("image/png");
-
-      // Create PDF
-      const pdf = new jsPDF("p", "mm", "a4");
-      const width = pdf.internal.pageSize.getWidth();
-      const height = (canvas.height * width) / canvas.width;
-      pdf.addImage(imgData, "PNG", 0, 0, width, height);
-
-      // Convert PDF to Blob
-      const pdfBlob = pdf.output("blob");
-
-      // Download using Axios-like blob handling
-      const url = window.URL.createObjectURL(pdfBlob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute(
-        "download",
-        `Medical_Report_${patientInfo.patientName}_${reportDate}.pdf`
-      );
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode?.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      y += 4;
+      pdf.line(10, y, pageWidth - 10, y);
+      y += 6;
     }
+
+    // ---------------- DOCTOR INFO ----------------
+    pdf.setFontSize(16);
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Doctor Information", 10, y);
+    y += 6;
+    pdf.setFontSize(11);
+    pdf.setFont("helvetica", "normal");
+
+    Object.entries(doctorInfo).forEach(([key, val]) => {
+      pdf.text(`${key.replace(/([A-Z])/g, " $1")}: ${val || "-"}`, 10, y);
+      y += 6;
+      if (y > 280) { pdf.addPage(); y = 15; }
+    });
+    y += 15;
+
+    // Signature line
+    pdf.setDrawColor(0);
+    pdf.setLineWidth(0.5);
+    pdf.line(10, y, 90, y);
+    pdf.text("Doctor's Signature", 10, y + 5);
+
+    // Save PDF
+    pdf.save(`Medical_Report_${patientInfo.patientName}_${reportDate}.pdf`);
+
   } catch (error) {
     console.error("Error generating PDF:", error);
     alert("Failed to generate PDF. Check console for details.");
