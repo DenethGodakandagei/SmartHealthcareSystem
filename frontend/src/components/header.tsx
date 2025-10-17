@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Button } from "./ui/button"; 
 import { Badge } from "./ui/badge"; 
 import { AuthContext } from "../context/authcontext"; 
-import { Calendar, ShieldCheck, Stethoscope, User } from "lucide-react";
+import { Calendar, ShieldCheck, Stethoscope, User , LayoutDashboard} from "lucide-react";
 
 export default function Header() {
 
@@ -65,6 +65,18 @@ export default function Header() {
                   </Button>
                   <Button variant="ghost" className="md:hidden w-10 h-10 p-0">
                     <Calendar className="h-4 w-4" />
+                  </Button>
+                </Link>
+              )}
+              {/* Patient Links */}
+              {user?.role === "staff" && (
+                <Link href="/staff">
+                  <Button variant="outline" className="hidden md:inline-flex items-center gap-2">
+                    <LayoutDashboard className="h-4 w-4" />
+                    Staff Dashboard
+                  </Button>
+                  <Button variant="ghost" className="md:hidden w-10 h-10 p-0">
+                    <LayoutDashboard className="h-4 w-4" />
                   </Button>
                 </Link>
               )}

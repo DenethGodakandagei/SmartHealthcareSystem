@@ -10,7 +10,8 @@ export default function AppointmentCard({
   appointment: IAppointment;
 }) {
   const doctorName =
-    (appointment.doctorId as any)?.userId?.name || "Unknown Doctor";
+    (appointment.doctorId as any)?.doctorName || "Unknown Doctor"
+;
   const patientName =
     (appointment.patientId as any)?.userId?.name || "Unknown Patient";
 
@@ -28,7 +29,7 @@ export default function AppointmentCard({
       </div>
       <div className="flex gap-2">
         <Link href={`/staff/confirm?appointmentId=${appointment._id}`}>
-          <button className="px-3 py-1 text-white bg-green-600 rounded-md hover:bg-green-700">
+          <button className="px-3 py-1 text-white bg-green-800 rounded-md hover:bg-green-700">
             Confirm
           </button>
         </Link>

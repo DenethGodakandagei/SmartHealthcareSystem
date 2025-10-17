@@ -74,13 +74,13 @@ export class StaffService {
     // 6. Send notification (email/SMS) to the patient and doctor
     // This would involve integrating with an email/SMS service.
     // For now, we'll just log a message.
-    console.log(
-      `Notification sent to patient ${
-        (patient.userId as any).name
-      } and doctor ${
-        (doctor.userId as any).name
-      } for appointment ${appointmentId}.`
-    );
+    // console.log(
+    //   `Notification sent to patient ${
+    //     (patient.userId as any).name
+    //   } and doctor ${
+    //     (doctor.userId as any).name
+    //   } for appointment ${appointmentId}.`
+    // );
 
     return updatedAppointment;
   }

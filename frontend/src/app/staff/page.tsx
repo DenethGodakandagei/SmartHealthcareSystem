@@ -14,6 +14,7 @@ export default function StaffPage() {
       try {
         const data = await getPendingAppointments();
         setAppointments(data);
+        console.log("Appmnt dt", data);
       } catch (error) {
         console.error("Failed to load appointments:", error);
       } finally {
@@ -23,7 +24,8 @@ export default function StaffPage() {
     fetchData();
   }, []);
 
-  if (loading) return <div className="p-6 text-gray-500">Loading appointments...</div>;
+  if (loading)
+    return <div className="p-6 text-gray-500">Loading appointments...</div>;
 
   return (
     <div className="p-6">
