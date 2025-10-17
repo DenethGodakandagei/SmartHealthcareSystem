@@ -10,5 +10,11 @@
     "outDir": "dist",
     "resolveJsonModule": true
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "src/tests/record.test.ts",
+    "src/tests/record.service.test.ts",
+    "src/tests/HealthcareReportService.test.ts",
+    "src/tests/HealthcareReport.test.ts"
+  ]
 }

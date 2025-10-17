@@ -1,10 +1,10 @@
 import express from "express";
-import authRoutes from "./auth.routes";
-import patientRoutes from "./patient.route";
-import reportRoutes from "./report.routes";
-import doctorRoutes from "./doctor.routes";
-import appointmentRoutes from "./appointment.routes";
-import staffRoutes from "./staff.routes";
+import authRoutes from "./auth.routes.js";
+import patientRoutes from "./patient.route.js";
+import reportRoutes from "./HealthcareReport.routes.js";
+import doctorRoutes from "./doctor.routes.js";
+import appointmentRoutes from "./appointment.routes.js";
+import staffRoutes from "./staff.routes.js";
 
 const router = express.Router();
 

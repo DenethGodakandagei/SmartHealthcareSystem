@@ -70,7 +70,7 @@ export default function Header() {
               )}
 
               {/* Logout Button */}
-              {["admin", "doctor", "patient"].includes(user?.role) && (
+              {["admin", "doctor", "patient", "staff"].includes(user?.role) && (
                 <Link onClick={logout} href={"/"}>
                   <Badge
                     variant="outline"

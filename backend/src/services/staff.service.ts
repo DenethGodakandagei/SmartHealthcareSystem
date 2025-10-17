@@ -1,9 +1,8 @@
-import Appointment from "../models/appointment.model.js";
-import Doctor from "../models/doctor.model.js";
-import Patient from "../models/patient.model.js";
-import Staff from "../models/staff.model.js"; // Assuming a Staff model exists
-import User from "../models/user.model.js"; // Import User model to get patient/doctor names
-import { IAppointment } from "../interfaces/appointment.interfaces.js";
+import Appointment from "../models/appointment.model";
+import Doctor from "../models/doctor.model";
+import Patient from "../models/patient.model";
+import User from "../models/user.model"; // Import User model to get patient/doctor names
+import { IAppointment } from "../interfaces/appointment.interfaces";
 import { Types } from "mongoose";
 
 export class StaffService {

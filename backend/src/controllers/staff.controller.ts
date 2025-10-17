@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { StaffService } from "../services/staff.service.js";
+import { StaffService } from "../services/staff.service";
 import { Types } from "mongoose";
 
 // Extend the Request interface to include the user property
