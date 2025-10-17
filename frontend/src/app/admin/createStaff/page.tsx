@@ -43,7 +43,7 @@ export default function RegisterStaff() {
     try {
       await API.post("/auth/register", form);
       alert("Staff registered successfully!");
-      router.push("/admin/dashboard");
+      router.push("/");
     } catch (err: any) {
       console.error("Error registering staff:", err);
       setError(err.response?.data?.message || "Failed to register staff");
@@ -163,7 +163,7 @@ export default function RegisterStaff() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full px-4 py-2 text-white bg-green-700 hover:bg-blue-700 rounded-lg font-semibold shadow-md transition-colors duration-300 disabled:opacity-60 cursor-pointer"
+            className="w-full px-4 py-2 text-white bg-green-700 hover:bg-green-800 rounded-lg font-semibold shadow-md transition-colors duration-300 disabled:opacity-60 cursor-pointer"
           >
             {loading ? "Registering..." : "Register Staff"}
           </Button>
