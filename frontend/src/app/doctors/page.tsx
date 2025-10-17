@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { SPECIALTIES } from "@/lib/specialities";
 import { DoctorCard } from "./components/doctor-card";
@@ -20,6 +20,9 @@ export default function DoctorsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Ref to scroll to doctors list
+  const doctorsRef = useRef<HTMLDivElement>(null);
+
   // Fetch all doctors on initial render
   const fetchDoctors = async () => {
     setLoading(true);
@@ -29,6 +32,7 @@ export default function DoctorsPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to fetch doctors");
       setDoctors(data);
+      setFilteredDoctors(data); // Show all doctors initially
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -43,10 +47,15 @@ export default function DoctorsPage() {
   // Filter doctors when a specialty is selected
   const handleSpecialtyClick = (specialty: string | null) => {
     setSelectedSpecialty(specialty);
-    if (!specialty) {
-      setFilteredDoctors(doctors); // Show all doctors
-    } else {
-      setFilteredDoctors(doctors.filter((doc) => doc.specialization === specialty));
+    const filtered = specialty
+      ? doctors.filter((doc) => doc.specialization === specialty)
+      : doctors; // Show all doctors
+
+    setFilteredDoctors(filtered);
+
+    // Auto-scroll to doctors list
+    if (doctorsRef.current) {
+      doctorsRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -97,7 +106,7 @@ export default function DoctorsPage() {
       </div>
 
       {/* Doctors List */}
-      <div>
+      <div ref={doctorsRef}>
         {loading && <p className="text-center text-gray-700">Loading doctors...</p>}
         {error && <p className="text-center text-red-500">{error}</p>}
         {!loading && filteredDoctors.length === 0 && (
