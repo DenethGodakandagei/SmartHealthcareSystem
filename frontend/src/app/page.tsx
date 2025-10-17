@@ -1,12 +1,19 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import React, { useContext, } from "react";
+import { AuthContext } from "../context/authcontext"; 
 import { ArrowRight, Stethoscope } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { creditBenefits, features, testimonials } from "@/lib/data"; // Assuming this is now .tsx
 
+
 export default function Home() {
+
+  const { user, token } = useContext(AuthContext);
   // Use bg-background (white/light) for the body background
   return (
     <div className="bg-background">
@@ -32,24 +39,42 @@ export default function Home() {
                 journey all in one secure platform.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button
-                  asChild
-                  size="lg"
-                  className="bg-emerald-600 text-white hover:bg-emerald-700"
-                >
-                  <Link href="/login">
-                    Login <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  size="lg"
-                  className="border-gray-300 hover:bg-gray-100" // Adjusted for light background
-                >
-                  <Link href="/register">Register as Patient</Link>
-                </Button>
+                {user?.role === "patient" && token ? (
+                  // ✅ If user is a logged-in patient
+                  <Button
+                    asChild
+                    size="lg"
+                    className="bg-emerald-600 text-white hover:bg-emerald-700"
+                  >
+                    <Link href="/doctors">
+                      Channel a Doctor <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                ) : (
+                  // ❌ Fixed: removed misplaced parentheses and wrapped both buttons in a fragment
+                  <>
+                    <Button
+                      asChild
+                      size="lg"
+                      className="bg-emerald-600 text-white hover:bg-emerald-700"
+                    >
+                      <Link href="/login">
+                        Login <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
+
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="lg"
+                      className="border-gray-300 hover:bg-gray-100"
+                    >
+                      <Link href="/register">Register as Patient</Link>
+                    </Button>
+                  </>
+                )}
               </div>
+
             </div>
 
             <div className="relative h-[400px] lg:h-[600px] rounded-xl overflow-hidden">
