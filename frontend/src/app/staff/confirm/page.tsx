@@ -12,10 +12,10 @@ export default function ConfirmPage() {
 
   // Define options with label + color
   const quickOptions = [
-    { label: "Pending", color: "yellow" },
+    // { label: "Pending", color: "yellow" },
     { label: "Confirmed", color: "green" },
-    { label: "Completed", color: "blue" },
-    { label: "Cancelled", color: "red" },
+    // { label: "Completed", color: "blue" },
+    // { label: "Cancelled", color: "red" },
   ];
 
   async function handleConfirm() {
