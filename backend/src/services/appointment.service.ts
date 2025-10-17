@@ -7,7 +7,7 @@ export class AppointmentService {
 
   //  Book a new appointment
 async createAppointment(data: IAppointment): Promise<IAppointment> {
-    const mockPatientId = "670d6a132f18f9a0c3e67bcd"; // fallback for testing
+  
     const { doctorId, patientId, appointmentDate, timeSlot, reasonForVisit, payment } = data;
 
     // ✅ Validate doctor existence
@@ -15,7 +15,8 @@ async createAppointment(data: IAppointment): Promise<IAppointment> {
     if (!doctor) throw new Error("Doctor not found");
 
     // ✅ Validate or use mock patient
-    const patient = await Patient.findById(patientId || mockPatientId);
+    console.log(patientId);
+    const patient = await Patient.findOne({ userId: patientId });
     if (!patient) throw new Error("Patient not found");
 
     // ✅ Check for conflicting appointment

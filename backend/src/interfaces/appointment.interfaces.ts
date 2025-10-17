@@ -16,4 +16,5 @@ export interface IAppointment {
     status: "Pending" | "Paid" | "Refunded";
     transactionId?: string;
   };
+  reference?: string; // ✅ Add this line
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,9 +27,9 @@ interface Doctor {
 
 export default function BookAppointmentPage() {
   const router = useRouter();
-  const [doctorId, setDoctorId] = useState<string | null>(null);
-  //const patientId = searchParams.get("patientId");
- const patientId = '68efa503b68824a0102d5ec7';
+  const searchParams = useSearchParams(); // ✅ FIXED
+  const patientId = searchParams.get("patientId"); // ✅ FIXED
+  const doctorId = searchParams.get("doctorId")
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [appointmentDate, setAppointmentDate] = useState<string>("");
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
@@ -40,15 +40,6 @@ export default function BookAppointmentPage() {
   console.log("patient", patientId);
   console.log("doctorId", doctorId);
 
-  // Read doctorId from the URL on the client to avoid useSearchParams prerender bailout
-  useEffect(() => {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      setDoctorId(params.get("doctorId"));
-    } catch (err) {
-      // ignore in non-browser contexts (shouldn't happen since this is a client component)
-    }
-  }, []);
 
   // Fetch doctor details
   useEffect(() => {
