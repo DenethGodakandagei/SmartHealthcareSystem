@@ -18,9 +18,6 @@ import {
   CheckCircle,
 } from "lucide-react";
 
-// ============================
-// Type Definitions
-// ============================
 interface Appointment {
   _id: string;
   doctorId: {
@@ -157,17 +154,14 @@ export function AppointmentCard({
                 <h3 className="font-medium text-black">
                   {userRole === "doctor"
                     ? otherParty?.name
-                    : `Dr. ${otherParty?.name}`}
+                    : ` ${appointment?.reference}`}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  {/* {userRole === "doctor"
-                    ? otherParty?.email
-                    : otherParty?.specialty} */}
-                    Specialization is here
+                  Payment Status: {appointment.payment.status}
                 </p>
                 <div className="flex items-center mt-2 text-sm text-muted-foreground">
                   <Calendar className="h-4 w-4 mr-1" />
-                  <span>{formatDate(appointment.appointmentDate)}</span>
+                  <span> Appointment Date: {formatDate(appointment.appointmentDate)}</span>
                 </div>
                 <div className="flex items-center mt-1 text-sm text-muted-foreground">
                   <Clock className="h-4 w-4 mr-1" />
@@ -176,6 +170,21 @@ export function AppointmentCard({
                     {formatTime(appointment.timeSlot.end)}
                   </span>
                 </div>
+                <span> Appointment Status: 
+                  <Badge
+                variant="outline"
+                className={
+                  appointment.status === "Completed"
+                    ? "bg-emerald-900/20 border-emerald-900/30 text-emerald-400"
+                    : appointment.status === "Cancelled"
+                    ? "bg-red-900/20 border-red-900/30 text-red-400"
+                    : "bg-amber-900/20 border-amber-900/30 text-amber-400"
+                }
+              >
+                {appointment.status}
+              </Badge>
+                </span>
+                
               </div>
             </div>
 

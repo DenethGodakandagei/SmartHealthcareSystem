@@ -45,14 +45,15 @@ export const deletePatient = async (req: Request, res: Response) => {
 export const getPatientByUserId = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const patient = await patientService.getPatientByUserId(userId);
+    const patient = await PatientService.getPatientByUserId(userId);
 
     if (!patient) {
-      return res.status(404).json({ message: "Patient not found for this user" });
+      return res.status(404).json({ message: "Patient not found" });
     }
 
     res.status(200).json(patient);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
+  } catch (error) {
+    console.error("Error fetching patient:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };

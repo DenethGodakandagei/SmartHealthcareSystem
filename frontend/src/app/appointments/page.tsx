@@ -20,7 +20,7 @@ export default function PatientAppointmentsPage() {
       if (!user?._id) return;
 
       try {
-        const res = await fetch(`http://localhost:5000/api/patients/patients/by-user/${user._id}`, {
+        const res = await fetch(`http://localhost:5000/api/patients/by-user/${user._id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
