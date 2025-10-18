@@ -21,8 +21,6 @@ build/
 # Optional npm cache
 .npm
 # Environment variables
-.env
-.env.local
 .env.*.local
 
 # ----------------------
@@ -51,3 +49,4 @@ frontend/yarn-error.log*
 .DS_Store
 Thumbs.db
 *.swp
+config.bat
