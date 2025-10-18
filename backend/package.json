@@ -4,12 +4,12 @@
   "description": "",
   "type": "module",
   "main": "src server.ts",
- "scripts": {
-  "dev": "tsx watch src/server.ts",
-  "build": "tsc",
-  "start": "node dist/server.js",
-  "test": "jest --detectOpenHandles --forceExit"
-},
+  "scripts": {
+    "dev": "node init && tsx watch src/server.ts",
+    "build": "node init && tsc",
+    "start": "node init && node dist/server.js",
+    "test": "jest --detectOpenHandles --forceExit"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
