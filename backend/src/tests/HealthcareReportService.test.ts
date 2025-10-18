@@ -1,7 +1,7 @@
 // __tests__/HealthcareReportService.test.ts
-import { HealthcareReportService } from "../services/HealthcareReport.service";
-import HealthcareReport from "../models/HealthcareReport.model";
-import { IHealthcareReport } from "../interfaces/HealthcareReport";
+import { HealthcareReportService } from "../services/HealthcareReport.service.js";
+import HealthcareReport from "../models/HealthcareReport.model.js";
+import { IHealthcareReport } from "../interfaces/HealthcareReport.js";
 
 jest.mock("../models/HealthcareReport.model"); // Mock the Mongoose model
 
@@ -73,9 +73,13 @@ describe("HealthcareReportService", () => {
 
   it("should update a report", async () => {
     const updatedReport = { ...mockReport, reportDate: "2025-10-17" };
-    (HealthcareReport.findByIdAndUpdate as any).mockResolvedValue(updatedReport);
+    (HealthcareReport.findByIdAndUpdate as any).mockResolvedValue(
+      updatedReport
+    );
 
-    const result = await service.updateReport("someId", { reportDate: "2025-10-17" });
+    const result = await service.updateReport("someId", {
+      reportDate: "2025-10-17",
+    });
     expect(result).toEqual(updatedReport);
     expect(HealthcareReport.findByIdAndUpdate).toHaveBeenCalledWith(
       "someId",

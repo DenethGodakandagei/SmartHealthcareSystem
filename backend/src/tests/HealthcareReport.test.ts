@@ -1,5 +1,5 @@
-import { HealthcareReportController } from "../controllers/HealthcareReport.controller";
-import { HealthcareReportService } from "../services/HealthcareReport.service";
+import { HealthcareReportController } from "../controllers/HealthcareReport.controller.js";
+import { HealthcareReportService } from "../services/HealthcareReport.service.js";
 
 // Mock the Service class
 jest.mock("../services/HealthcareReport.service");
@@ -44,7 +44,8 @@ describe("HealthcareReportController", () => {
   };
 
   beforeEach(() => {
-    mockService = new HealthcareReportService() as jest.Mocked<HealthcareReportService>;
+    mockService =
+      new HealthcareReportService() as jest.Mocked<HealthcareReportService>;
     mockService.createReport = jest.fn();
     mockService.getAllReports = jest.fn();
     mockService.getReportById = jest.fn();
@@ -118,13 +119,18 @@ describe("HealthcareReportController", () => {
   });
 
   it("should update a report successfully", async () => {
-    mockReq = { params: { id: mockReport._id }, body: { reportDate: "2025-10-17" } };
+    mockReq = {
+      params: { id: mockReport._id },
+      body: { reportDate: "2025-10-17" },
+    };
     const updatedReport = { ...mockReport, reportDate: "2025-10-17" };
     mockService.updateReport.mockResolvedValueOnce(updatedReport);
 
     await controller.updateReport(mockReq, mockRes);
 
-    expect(mockService.updateReport).toHaveBeenCalledWith(mockReport._id, { reportDate: "2025-10-17" });
+    expect(mockService.updateReport).toHaveBeenCalledWith(mockReport._id, {
+      reportDate: "2025-10-17",
+    });
     expect(statusMock).toHaveBeenCalledWith(200);
     expect(jsonMock).toHaveBeenCalledWith(updatedReport);
   });
@@ -147,7 +153,9 @@ describe("HealthcareReportController", () => {
 
     expect(mockService.deleteReport).toHaveBeenCalledWith(mockReport._id);
     expect(statusMock).toHaveBeenCalledWith(200);
-    expect(jsonMock).toHaveBeenCalledWith({ message: "Report deleted successfully" });
+    expect(jsonMock).toHaveBeenCalledWith({
+      message: "Report deleted successfully",
+    });
   });
 
   it("should return 404 if deleting non-existent report", async () => {
