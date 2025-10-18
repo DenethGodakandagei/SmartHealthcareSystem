@@ -49,9 +49,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-20">
+    <div className="flex items-center justify-center min-h-screen py-20">
       <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-2xl">
-        <h1 className="text-3xl font-bold text-center text-blue-600 mb-6">Login</h1>
+        <h1 className="text-3xl font-bold text-center text-green-600 mb-6">Login</h1>
         <form className="space-y-5" onSubmit={handleSubmit}>
           <input
             name="email"
@@ -72,14 +72,14 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold shadow-md transition-colors duration-300 disabled:opacity-60"
+            className="w-full px-4 py-2 text-white bg-green-800 hover:bg-green-700 rounded-lg font-semibold shadow-md transition-colors duration-300 disabled:opacity-60"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
         <p className="mt-6 text-sm text-center text-gray-500">
           Don’t have an account?{" "}
-          <a href="/register" className="text-blue-600 hover:underline font-medium">
+          <a href="/register" className="text-green-800 hover:underline font-medium">
             Register
           </a>
         </p>
