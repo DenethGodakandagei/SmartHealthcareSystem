@@ -44,25 +44,24 @@ export class AuthService {
     });
 
     //  If patient role → create related Patient document
- 
-if (role === "patient" && extraData) {
-  const { age, gender, contactNumber, address } = extraData;
 
-  if (!age || !gender || !contactNumber || !address) {
-    throw new Error("Missing required patient details");
-  }
+    if (role === "patient" && extraData) {
+      const { age, gender, contactNumber, address } = extraData;
 
-  const newPatient = await Patient.create({
-    userId: user._id,
-    age,
-    gender,
-    contactNumber,
-    address,
-  });
+      if (!age || !gender || !contactNumber || !address) {
+        throw new Error("Missing required patient details");
+      }
 
-  console.log("Patient created:", newPatient._id);
-}
+      const newPatient = await Patient.create({
+        userId: user._id,
+        age,
+        gender,
+        contactNumber,
+        address,
+      });
 
+      console.log("Patient created:", newPatient._id);
+    }
 
     //  Generate JWT token
     const token = generateToken(user._id.toString(), user.role);
@@ -70,7 +69,7 @@ if (role === "patient" && extraData) {
     return { user, token };
   }
 
-    async loginUser(email: string, password: string): Promise<AuthResponse> {
+  async loginUser(email: string, password: string): Promise<AuthResponse> {
     // ✅ Check user existence
     const user = await User.findOne({ email });
     if (!user) throw new Error("User not found");
@@ -94,5 +93,4 @@ if (role === "patient" && extraData) {
 
     return { user: userData, token };
   }
-
 }
