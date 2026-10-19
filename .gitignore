@@ -44,7 +44,6 @@ frontend/yarn-error.log*
 # ----------------------
 # IDEs and OS
 # ----------------------
-.vscode/
 .idea/
 .DS_Store
 Thumbs.db
